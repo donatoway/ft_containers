@@ -42,38 +42,52 @@
 
 
 */
-// se la condizione booleana è vera viene definito i nuovo typedef T type
-/*
-namespace giga
-{
-  template<bool Cond, class T = void>
-  struct enable_if {};
-
-  template<class T> 
-  struct enable_if<true, T> 
-  { typedef T type; };
-
-// nel caso in cui il parametro passto sia false non lo fa neanche istanziare
-//e lo segnala coe errore perche tentiamo di accedere a type ma type non è stato creato
-template < class T, class = typename giga::enable_if<std::is_void<T>::value>::type>
-void is_even (T i)
-{
-  std::cout << "sono stato istanzito"<< std::endl;
-}
-*/
-class A {};
- 
-enum E : int {};
- 
-template <class T>
-T f(T i)
-{
-    static_assert(std::is_integral<T>::value, "Integral required.");
-    return i;
-}
-
+//provare a istanziare i costruttori
 int main()
 {
-  //creare enable_if nel ft namespace, una volta completato usare tutto
-  //cio per completare i costruttori 
+  /*
+  //empty default constructor
+  ft::vector<int> a;
+
+  //fill constructor 
+  std::cout << GREEN"FILL CONSTRUCTOR"RESET << "\n";
+  ft::vector<int> b(5,100);
+  for (size_t i = 0; i < 5; i++)
+    std::cout << b[i] << "\n";
+
+  //iterator constructor
+  std::cout << GREEN"ITERATOR CONSTRUCTOR"RESET << "\n";
+  std::vector<int> c;
+  for (size_t i = 0; i < 9; i++)
+    c.push_back(i);
+  ft::vector<int>   d(c.begin(),c.end());
+  for (size_t i = 0; i < 9; i++)
+    std::cout << d[i] << "\n";
+
+  //copy constructor
+  std::cout << GREEN"COPY CONSTRUCTOR"RESET << "\n";
+  ft::vector<int>   e(b);
+  for (size_t i = 0; i < 5; i++)
+    std::cout << e[i] << "\n";
+  //assign=operator 
+  std::cout << GREEN"ASSGN-OPERATOR CONSTRUCTOR"RESET << "\n";
+  ft::vector<int> foo(5,70);
+  ft::vector<int> bar(6,1);
+  bar = foo;
+  for (size_t i = 0; i < 5; i++)
+    std::cout << bar[i] << "\n";
+    */
+  //continuare con le funzioni (INIZIARLE)
+ // ft::vector<char> my(100,6);
+  std::vector<int> myvector;
+
+
+ft::vector<int>   v(5,100);
+
+std::cout << v.begin();
+
+
+//creare la classe iterator
+
+
 }

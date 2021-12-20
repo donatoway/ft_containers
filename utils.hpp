@@ -5,6 +5,14 @@
 
 namespace ft
 {
+
+//--------------------- ENABLE_IF   ---------------------------------
+template<bool Cond, class T = void> struct enable_if {};
+template<class T> struct enable_if<true, T> { typedef T type; };
+
+
+
+
 //--------------------- IS_INTEGRAL ---------------------------------
     //STRUCT BASE : INTEGRAL_CONSTANT
     template <bool bool_type, typename t_value>
