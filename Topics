@@ -131,4 +131,29 @@ che viene impostato a true o false
             
             }
 
+//----------------------------- ITERATOR ----------------------------------------------------
 
+Un iteratore é qualsiasi oggetto che puntando a un elemento in un intervallo di elementi (come un array o un contenitore), ha 
+la capacitá di scorrere gli elementi di quell'intervallo utilizzando un insieme di operatori (con almeno l'incremento (++) e 
+operatori di dereferenziazione (*)).
+
+ La forma piu usata di iteratore é un puntatore : un puntatore puo puntare agli elementi di un array e puo scorrere attraverso di essi 
+ utilizzano l'operatore di incremento (++). Ma sono possibili altri tipi di iteratori. Ad esempio,
+ ogni, ogni tipo di contenitore (come un elenco) ha un tipo di iteratore specificoprogettato per scorrere i suooi elementi.
+
+ Nota che mentre un puntatore é una forma di iteratore, non tutti gli iteratori hanno la stessa funzionalità dei puntatori;
+ a seconda delle proprietà supportate dagli iteratori, sono classificati in cinque diverse categorie:
+
+ Input  <---- Forward <---- Bidirectional <---- Random Access
+ Output
+
+ //------------------------------ REVERSE ITERATOR -------------------------------------------------
+ reverse iterator è un adatttatore iteratore che inverte la direzione di un determinato iteratore, che deve essere almeno un 
+ Legacy Bidirezionale iterator o un modello bidirezionale iterator. an altre parole, quando viene fornito con un iteratore 
+ bidirezionale std::reverse_iterator produce un nuovo iteratore che si sposta dalla fine della sequenza definita dall'iteratore
+ bidirezionale sottostante.
+
+ per u iteratore invers r costruito da un iteratore i, la &*r == &*(i - 1) è sempre ver (purche r sia dereferenziabile);
+ quindi un iteratore inverso costruito da un iteratore one-pas the end dereferenziabile all'ultimo element di una sequenza.
+
+ Questo è l'iteratore restituito dalle funzioni membro rbegin() e rend() dei contenitori della libreria standard.

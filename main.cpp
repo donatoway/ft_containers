@@ -1,9 +1,8 @@
-#include <iostream>
 #include "vector.hpp"
-#include <memory>
+#include "iterators.hpp"
+#include <iterator>
 #include <vector>
-#include <type_traits>
-
+#include <iostream>
 /*
  1) In questo progetto reimplementerai i vari tipi di Conteiners
     Per ogni containers metti dentro la sua class file .hpp
@@ -45,7 +44,7 @@
 //provare a istanziare i costruttori
 int main()
 {
-  /*
+  
   //empty default constructor
   ft::vector<int> a;
 
@@ -76,18 +75,38 @@ int main()
   bar = foo;
   for (size_t i = 0; i < 5; i++)
     std::cout << bar[i] << "\n";
-    */
-  //continuare con le funzioni (INIZIARLE)
- // ft::vector<char> my(100,6);
-  std::vector<int> myvector;
 
+  //TEST ITERATOR E REVERSE_ITERATOR
+  std::cout << GREEN"TEST ITERATOR : "RESET << "\n";
+  int array[9] = {1,2,3,4,5,6,7,8,9};
+  ft::vector<int>                   TestIterator(array, array + 9);
+  ft::vector<int>::iterator         it;
+  for (it = TestIterator.begin(); it != TestIterator.end(); it++)
+    std::cout << *it << " ";
+  
+  std::cout << GREEN"\nTEST REVERSE ITERATOR : "RESET << "\n";
+  ft::vector<int>::reverse_iterator   rev_it;
+  for (rev_it = TestIterator.rbegin(); rev_it != TestIterator.rend(); rev_it++)
+    std::cout << *rev_it << " ";
 
-ft::vector<int>   v(5,100);
+  //contnuare con capacitty
+  //resize
+  std::cout << GREEN"\nTEST RESIZE : "RESET << "\n";
+  int ar[5] = {1,2,3,4,5};
+  ft::vector<int>     res(ar, ar + 5);
+  ft::vector<int>::iterator it2;
+  std::cout << "before  : ";
+  for (it2 = res.begin(); it2 != res.end(); it2++)
+    std::cout << *it2 << " ";
+  std::cout << "\nafter    :";
+  res.resize(10,55);
+  for (it2 = res.begin(); it2 != res.end(); it2++)
+    std::cout << *it2 << " ";
+  res.resize(2);
+  std::cout << "\nafter less: ";
+  for (it2 = res.begin(); it2 != res.end(); it2++)
+    std::cout << *it2 << " ";
 
-std::cout << v.begin();
-
-
-//creare la classe iterator
-
-
+  //RESIZE E RESERVE FATTI CONTINUARE CON LE ALTRE FUNZIONI
+  return 0;
 }
