@@ -52,7 +52,7 @@ namespace ft
                     const allocator_type& Allocator = allocator_type()):_allocation(Allocator), _size(n)
                 {
                     _vector = _allocation.allocate(n);
-
+                    _capacity = n * 2;
                     for (size_t i = 0; i < n; ++i)
                         _allocation.construct(&_vector[i], val);
                 };
@@ -69,7 +69,7 @@ namespace ft
                     for (InputIterator iter = first; iter != last; iter++)
                         i++;
                     _size = i;
-                    _capacity = i;
+                    _capacity = i*2;
 \
                     InputIterator it = first;
                     _vector = _allocation.allocate(i);
@@ -167,7 +167,32 @@ namespace ft
                         _size = n;
                     }
                 };
+
+                bool empty() const
+                {
+                    //controlla che il container non ha elementi
+                    //ritorna true se non ha elementi altrimenti false
+
+                    if (_size == 0) return true;
+                    return false;
+                }
+
+                size_type capacity() const
+                {
+                    return (_capacity);
+                };
+
+        //------------- ELEMENT ACCESS ---------------------------
                 reference   operator[](size_type n){return _vector[n];}
+                reference at( size_type pos )
+                {
+                    if (pos < 0 || pos > _size)
+                        throw std::out_of_range("out of range");
+                    return (_vector[pos]);
+                    //ritorna una referenza a una specifica posizione pos
+                };
+
+
                 private:
                         allocator_type                  _allocation;
                         pointer                         _vector;

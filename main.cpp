@@ -44,7 +44,7 @@
 //provare a istanziare i costruttori
 int main()
 {
-  
+  /*
   //empty default constructor
   ft::vector<int> a;
 
@@ -89,7 +89,6 @@ int main()
   for (rev_it = TestIterator.rbegin(); rev_it != TestIterator.rend(); rev_it++)
     std::cout << *rev_it << " ";
 
-  //contnuare con capacitty
   //resize
   std::cout << GREEN"\nTEST RESIZE : "RESET << "\n";
   int ar[5] = {1,2,3,4,5};
@@ -106,7 +105,14 @@ int main()
   std::cout << "\nafter less: ";
   for (it2 = res.begin(); it2 != res.end(); it2++)
     std::cout << *it2 << " ";
+  //TEST EMPTY
+  */
+  std::cout << GREEN"\nTEST EMPTY : "RESET << "\n";
+  ft::vector<int>     a(10,2);
+  if (a.empty() == true)
+    std::cout << "A IS EMPTY\n";
 
-  //RESIZE E RESERVE FATTI CONTINUARE CON LE ALTRE FUNZIONI
+  //at fatto continuare a fare i test e le alter funzioni 
+
   return 0;
 }
