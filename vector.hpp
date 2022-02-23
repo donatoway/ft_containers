@@ -26,7 +26,7 @@ namespace ft
                 typedef T                                               value_type;
                 typedef alloc                                           allocator_type;
                 typedef typename allocator_type::size_type              size_type;
-               // typedef typename std::ptrdiff_t                         difference_type;
+                typedef typename std::ptrdiff_t                         difference_type;
                 typedef typename allocator_type::reference              reference;
                 typedef typename allocator_type::const_reference        const_reference;
                 typedef typename allocator_type::pointer                pointer;
@@ -49,14 +49,16 @@ namespace ft
                 //Fill Constructor (costruisce un vettore con n elementi, ed ogni elemento è una copia di val)
 
                 explicit vector (size_type n, const value_type& val = value_type(),
-                    const allocator_type& Allocator = allocator_type()):_allocation(Allocator), _size(n)
+                    const allocator_type& Allocator = allocator_type()):_allocation(Allocator), _size(n), _vector(0),_capacity(0)
                 {
-                    _vector = _allocation.allocate(n);
                     _capacity = n * 2;
-                    for (size_t i = 0; i < n; ++i)
-                        _allocation.construct(&_vector[i], val);
+                    _vector = _allocation.allocate(_capacity);
+                    if (n > 0)
+                    {
+                        for (size_t i = 0; i < n; i++)
+                            _allocation.construct(&_vector[i], val);
+                    }
                 };
-
                 //Range Constructor (costruisce un vettore con tanti elementi quanto il range [first last] , con
                     //ogni elemento costruito dal suo corrispondente elemento in quella posizione del range, nello stesso ordine)
 
@@ -143,7 +145,7 @@ namespace ft
                         _vector = temp;
                     };
                 };
-
+                
                 void resize (size_type n, value_type val = value_type())
                 {
                     //se n è maggiore della capacità del vettore alloco memoria extra
@@ -191,16 +193,116 @@ namespace ft
                     return (_vector[pos]);
                     //ritorna una referenza a una specifica posizione pos
                 };
+                const_reference at( size_type pos )const
+                {
+                    if (pos < 0 || pos > _size)
+                        throw std::out_of_range("out of range");
+                    return (_vector[pos]);
+                    //ritorna una referenza a una specifica posizione pos
+                };
+                reference front() {return (_vector[0]);};
+                const_reference front () const{return (_vector[0]);};
+                reference back() {return *(end() - 1);};
+                const_reference back()const {return *(end() - 1 );};
+            //Modifiers
 
+            void clear(){_size = 0;};
+            // INSERT: (2 parametri) inserisce un elemento in una specifica posizione
+            // riallocazione se la nuova size è maggiore della vecchia capacity
+            // tutti gli iteratori e referenze sono invalidate
+            // tuttavia solo gli iteratori e referenze prima del punto di inserzione
+            // rimangono validi 
+            iterator insert( iterator pos, const T& value )
+            {
+                iterator it;
+                size_t  i = 0;
+                size_t  x = 0;
+                for (it = begin(); it != pos; it++)
+                    i++;
+                if (i > size())
+                {
+                    _size = i;
+                    reserve(i*2);
+                }
+                _size++;
+                x = i;
+                i++;
+                while (i < _size)
+                    _vector[i++] = *it++;
+                _vector[x] = value;      
+                return it;
+            };
+            //INSERT: (3 parametri) inserisce un'ammontare di volte,
+            //il valore passato come terzo argomento
+            void insert( iterator pos, size_type count, const T& value )
+            {
+                iterator    it;
+                size_t      i = 0;
+                size_t      x = 0;
+                for (it = begin(); it != pos; it++)
+                    i++;
+                if (i > _size)
+                    _size = i;
+                _size += count;
+                if (_capacity < _size)
+                    reserve(_size * 2);
+                
+
+                x = i;
+                i+= count;
+
+                while (++i < _size)
+                    _vector[i] = *it++;
+                while (count--)
+                {
+                    _vector[x] = value;
+                    x++;
+                }
+                
+            };
+
+            //INSERT : (3 parametri Template) inserisce un range di elementi
+            // da first a last, alla posizione pos
+            template< class InputIt >
+            void insert( iterator pos, InputIt first, InputIt last, typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type* = 0 )
+            {
+                //trovo il numero di elementi da inserire
+                //itero un i per capire la posizione
+                //capisco se devo riallocare capacity e cambio la size
+                //riempio il nuovo vector
+
+                iterator it;
+                InputIt it2;
+                size_t  i = 0;
+                size_t  x;
+                size_t  count = 0;
+                for (it = begin(); it != pos; ++it)
+                    i++;
+                for (it2 = first; it2 != last; ++it2)
+                    count++;
+                if (i > _size)
+                    _size = i;
+                 _size += count;
+                if (_capacity < _size)
+                    reserve(_size * 2);
+                x = i;
+                size_t nsize = _size - 1;
+                while (nsize  >= (count + i))
+                {
+                    _vector[nsize] = _vector[nsize - count];
+                    nsize--;
+                };
+                while (count--)
+                    _vector[i++] = *first++;      
+            };
 
                 private:
                         allocator_type                  _allocation;
                         pointer                         _vector;
                         size_type                       _size;
                         size_type                       _capacity;
-
     };
 
+};
 
-}
 #endif

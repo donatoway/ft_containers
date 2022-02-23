@@ -106,13 +106,69 @@ int main()
   for (it2 = res.begin(); it2 != res.end(); it2++)
     std::cout << *it2 << " ";
   //TEST EMPTY
-  */
+  
   std::cout << GREEN"\nTEST EMPTY : "RESET << "\n";
   ft::vector<int>     a(10,2);
   if (a.empty() == true)
     std::cout << "A IS EMPTY\n";
+  std::cout << GREEN"\nTEST AT : "RESET << "\n";
+  ft::vector<int>       b(10);
+  for (size_t i = 0; i < 10; i++)
+    b.at(i) = i;
+  for (size_t i = 0; i < 10; i++)
+     std::cout <<  b.at(i)  << " ";
+  std::cout << "\n";
+  std::cout << GREEN"\nTEST FRONT BACK: "RESET << "\n";
+  std::cout << "front : " << b.front() << "\n";
+  std::cout << "back  : " <<  b.back() << "\n";
 
-  //at fatto continuare a fare i test e le alter funzioni 
+  std::cout << GREEN"\nTEST CLEAR: "RESET << "\n";
+  b.clear();
+  if (*b.begin())
+  {
+     ft::vector<int>::iterator it34;
+    for (it34 = b.begin(); it34 != b.end(); it34++)
+      std::cout << *it34 << "\n";
+  }
+  else
+    std::cout << "CLEAR EXECUTED, SIZE =  " << b.size() << "\n";
+  
 
-  return 0;
+std::cout << GREEN"\nTEST INSERT 2 Parametri: "RESET << "\n";
+ft::vector<int>   vect(5,100);
+
+vect.insert(vect.begin(),3);
+
+ft::vector<int>::iterator it;
+for (it = vect.begin(); it != vect.end(); it++)
+  std::cout << *it << "\n";
+
+std::cout << vect.size() << "\n";
+
+std::cout << GREEN"\nTEST INSERT 3 parametri: "RESET << "\n";
+ft::vector<int>     v(5,100);
+
+v.insert(v.begin() + 1, 3, 8);
+
+ft::vector<int>::iterator   itera;
+for (itera = v.begin(); itera != v.end(); itera++)
+  std::cout  << *itera << " ";
+*/
+std::cout << GREEN"\nTEST INSERT 3 parametri con Range: "RESET << "\n";
+ft::vector<int> v(5,100);
+	int array[5] = {1,2,3,4,5};
+	ft::vector<int> v2(array, array + 5);
+
+	v.insert(v.begin() + 2, v2.begin(), v2.end());
+
+	ft::vector<int>::iterator		it;
+
+	for (it = v.begin(); it != v.end(); it++)
+	{
+		std::cout << *it << "\n";
+	}
+
+
+  //INSERT TERMINATI RITESTARLI SOPRATTUTTO IL SECONDO E IL TERZO. CONTINUARE CON LE ALTRE FUNZIONI
+return 0;
 }
