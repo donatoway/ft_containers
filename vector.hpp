@@ -204,7 +204,7 @@ namespace ft
                 const_reference front () const{return (_vector[0]);};
                 reference back() {return *(end() - 1);};
                 const_reference back()const {return *(end() - 1 );};
-            //Modifiers
+        //------------------------ MODIFIERS --------------------------------
 
             void clear(){_size = 0;};
             // INSERT: (2 parametri) inserisce un elemento in una specifica posizione
@@ -246,19 +246,15 @@ namespace ft
                 _size += count;
                 if (_capacity < _size)
                     reserve(_size * 2);
-                
-
                 x = i;
-                i+= count;
-
-                while (++i < _size)
-                    _vector[i] = *it++;
-                while (count--)
+                size_t nsize = _size - 1;
+                while (nsize  >= (i + count))
                 {
-                    _vector[x] = value;
-                    x++;
-                }
-                
+                    _vector[nsize] = _vector[nsize - count];
+                    nsize--;
+                };
+                while (count--)
+                    _vector[i++] = value;
             };
 
             //INSERT : (3 parametri Template) inserisce un range di elementi
@@ -266,11 +262,6 @@ namespace ft
             template< class InputIt >
             void insert( iterator pos, InputIt first, InputIt last, typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type* = 0 )
             {
-                //trovo il numero di elementi da inserire
-                //itero un i per capire la posizione
-                //capisco se devo riallocare capacity e cambio la size
-                //riempio il nuovo vector
-
                 iterator it;
                 InputIt it2;
                 size_t  i = 0;
@@ -294,6 +285,49 @@ namespace ft
                 };
                 while (count--)
                     _vector[i++] = *first++;      
+            };
+
+            //ERASE (1 parametro): cancella l'elemente presente alla posizione pos
+            //          restituisce l'iterator end()
+            iterator erase( iterator pos )
+            {
+                iterator it;
+                size_t i = 0;
+                for (it = begin(); it != pos; it++)
+                    i++;
+                for (; i + 1 < _size ; i++)
+                {
+                    _vector[i] = _vector[i + 1];
+                }
+                 while (it != end())
+                    it++;
+                _size-= 1;
+                return it;      
+            };
+            //ERASE (2parametri): rimuove gli elementi nel range first - last
+            iterator erase( iterator first, iterator last )
+            {
+                iterator it;
+                size_t  count = 0;
+                size_t  i = 0;
+                for (it = first; it < last; it++)
+                    count++;
+                for (it = begin(); it != first; it++)
+                    i++;
+                size_t tmp = count;
+                while (count--)
+                {
+                    _vector[i] = _vector[i + tmp];
+                    i++;
+                }
+                _size -= tmp;
+                while (it != end())
+                    it++;
+                return it; 
+                
+                
+                
+                
             };
 
                 private:
