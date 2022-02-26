@@ -176,6 +176,34 @@ vi.erase(vi.begin() + 2, vi.begin() + 6);
 for (it = vi.begin(); it != vi.end(); it++)
   std::cout << *it<<" ";
 
-//TEST ERASE COMPLETATO CONTINUARE CON LE ALTRE FUNZIONI
+std::cout << GREEN"\nTest : PUSH_BACK"RESET << "\n";
+ft::vector<int>   vect_pb(5,100);
+vect_pb.push_back(8);
+for (it = vect_pb.begin(); it < vect_pb.end(); it++)
+  std::cout << *it << " ";
+
+std::cout << GREEN"\nTest : POP"RESET << "\n";
+ft::vector<int>   vect_p(5,100);
+vect_p.pop_back();
+for (it = vect_p.begin(); it < vect_p.end(); it++)
+  std::cout << *it << " ";
+
+std::cout << GREEN"\nTest : SWAP"RESET << "\n";
+
+ft::vector<int>   sw1(5,100);
+ft::vector<int>   sw2(2,300);
+
+sw1.swap(sw2);
+
+std::cout << "sw1: ";
+for ( it  = sw1.begin(); it != sw1.end(); it++)
+  std::cout << *it << " ";
+std::cout << "\nsw2: ";
+for (it = sw2.begin(); it != sw2.end(); it++)
+  std::cout << *it << " ";
+
+//continuare con gli operator overload
+
+
 return 0;
 }

@@ -323,13 +323,45 @@ namespace ft
                 _size -= tmp;
                 while (it != end())
                     it++;
-                return it; 
-                
-                
-                
-                
+                return it;          
             };
+            //PUSH_BACK : aggiunge un elemento alla coda del vettore
+            void push_back( const T& value )
+            {
+                if ((_size + 1) > _capacity)
+                    reserve((_size + 1)*2);
+                _size += 1;
+                iterator it;
+                size_t i = 0;
+                for (it = begin(); it != end(); it++,i++){};
+                _vector[i-1] = value;    
+            };
+            //POP_BACK : rimuove l'ultimo elemento
+            void pop_back()
+            {
+                _vector[_size] = 0;
+                _size -= 1;
 
+            };
+            //SWAP : Scambia il contenuto del conteiner con quello di altri
+            //       Non richiama nessun copy, move o swap sugli elementi
+            void swap( vector& other )
+            {
+                pointer vector_tmp = other._vector;
+                allocator_type _allocation_tmp = other._allocation;
+                size_type       size_tmp =other._size;
+                size_type       _capacity_tmp =other. _capacity;
+
+                other._vector = this->_vector;
+                other._allocation = this->_allocation;
+                other._size = this->size();
+                other._capacity = this->_capacity;
+
+                this->_vector = vector_tmp;
+                this->_allocation = _allocation_tmp;
+                this->_size = size_tmp;
+                this->_capacity = _capacity_tmp;
+            };
                 private:
                         allocator_type                  _allocation;
                         pointer                         _vector;
