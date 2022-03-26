@@ -201,9 +201,28 @@ for ( it  = sw1.begin(); it != sw1.end(); it++)
 std::cout << "\nsw2: ";
 for (it = sw2.begin(); it != sw2.end(); it++)
   std::cout << *it << " ";
-
 //continuare con gli operator overload
+/*std::cout << GREEN"\nTest : =="RESET << "\n";
+ft::vector<char>  a(3,'a'),b(3,'a');
+if (a == b) std::cout << "a it's same b\n";
 
+std::cout << GREEN"\nTest : !="RESET << "\n";
+a.push_back('1');
+
+if (a != b) std::cout << "a it's not same b\n";
+
+std::cout << GREEN"\nTest : < "RESET << "\n";
+
+if (a  > b)
+  std::cout << "ciao\n";
+*/
+ft::vector<char>  a(3,'a'),b(3,'a');
+
+	a.push_back('1');
+	if (a < b)std::cout <<"cio\n";
+
+//risolvere il problema delle comparazioni < (minore) > (maggiore)
+//non funziona il test, controllare il perche e lexicographic
 
 return 0;
 }

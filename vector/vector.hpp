@@ -109,7 +109,7 @@ namespace ft
                 }
 
                 //FUNZIONI
-                //begin
+                
                 //------------------- ITERATOR -----------------------------
                 iterator        begin(){return iterator(_vector);};
                 const_iterator  begin()const {return const_iterator(_vector);};
@@ -186,6 +186,7 @@ namespace ft
 
         //------------- ELEMENT ACCESS ---------------------------
                 reference   operator[](size_type n){return _vector[n];}
+                reference   operator[](size_type n)const {return _vector[n];}
                 reference at( size_type pos )
                 {
                     if (pos < 0 || pos > _size)
@@ -369,6 +370,52 @@ namespace ft
                         size_type                       _capacity;
     };
 
+    //) Checks if the contents of lhs and rhs are equal, 
+    // that is, they have the same number of elements 
+    //and each element in lhs compares equal with the element in rhs at the same position.
+    template< class T, class Alloc >
+    bool operator==( const vector<T,Alloc>& lhs,
+    const vector<T,Alloc>& rhs ) 
+    {
+        if ((rhs.size() != lhs.size()) || (rhs.capacity() != lhs.capacity()))
+            return false;
+        size_t i = 0;
+        while (i < lhs.size())
+        {
+            if (rhs[i] != lhs[i])
+                return (false);
+            i++;
+        }
+            
+        return (true);
+    };
+
+    template< class T, class Alloc >
+    bool operator!=( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs ){return !(lhs == rhs);};
+
+    template< class T, class Alloc >
+    bool operator<( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs )
+    {
+        return (ft::lexicographical_compare(lhs.begin(),lhs.end(),rhs.begin(),rhs.end()));
+    }
+
+    template< class T, class Alloc >
+    bool operator<=( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs )
+    {
+        return (!(rhs > lhs));
+    }
+
+    template< class T, class Alloc >
+    bool operator>( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs )
+    {
+        return (ft::lexicographical_compare(rhs.begin(),rhs.end(),lhs.begin(),lhs.end()));
+    }
+
+    template< class T, class Alloc >
+    bool operator>=( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs )
+    {
+        return (!(rhs < lhs));
+    }
 };
 
 #endif
