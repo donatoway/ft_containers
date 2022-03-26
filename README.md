@@ -351,6 +351,25 @@ operatori di dereferenziazione (*)).
 
  Questo è l'iteratore restituito dalle funzioni membro rbegin() e rend() dei contenitori della libreria standard.
 
-=======
->>>>>>> b0f0c4441fa82aebe1c39530d420ded3b844e3e5
+# MAP
+
+Map è un Container associativo che salva gli elementi con una combinazione Chiave - Valore, seguendo un ordine specifico.
+In Map La chiave è usata generalmente per riordinare la lista di elememti;
+Map è piu lento rispetto a unordered_map , ma ti permette l'íterazione direttamente in base al loro ordine.
+Si puo accedere ai valori direttamente attraverso la loro chiave corrispondente, quindi con le brackets operator[]
+
+        Esempio di Utilizzo di Map:
+
+            map<string, string> uomo;
+    
+            uomo.insert(pair<string, string>("carlone", "cuoco"));
+
+            map<string, string>::iterator itr;
+
+            for (itr = uomo.begin() ;itr != uomo.end();itr++)
+                cout << itr->first << "-" << itr->second <<  endl;
+
+# Video Lezione Map
+
+https://www.youtube.com/watch?v=aEgG4pidcKU
 
