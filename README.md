@@ -205,11 +205,13 @@ Il RBTree segue 6 regole proncipali
 - NULL è sempre nero 
 
 Per aggiustare il nostro albero quando si verificano situazioni di violazione, ovvero che le regole sopra citate non vengono rispettate utilizziamo :
-            Rebalance:
-                    Black Aunt Rotate : Bar
-                    Red Aunt ColorFlip : RAC
-            Dopo Una Rotation il padre          dopo un ColorFlip il padre è rosso
-            è black e i figli sono rossi        e i figli sono neri 
-                    BLACK                               RED
-                    /   \                              /    \
-                RED        RED                      BLACK   BLACK
+
+
+                Rebalance:
+                        Black Aunt Rotate : Bar
+                        Red Aunt ColorFlip : RAC
+                Dopo Una Rotation il padre          dopo un ColorFlip il padre è rosso
+                è black e i figli sono rossi        e i figli sono neri 
+                        BLACK                               RED
+                        /   \                              /    \
+                    RED        RED                      BLACK   BLACK
