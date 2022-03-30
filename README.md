@@ -187,3 +187,18 @@ Si puo accedere ai valori direttamente attraverso la loro chiave corrispondente,
 
  # lezione su map :
 https://www.youtube.com/watch?v=aEgG4pidcKU
+
+# Red and Black tree
+
+Il RBTree segue 6 regole proncipali
+
+- Ogni Nodo è rosso o nero
+
+- La Root è sempre nera
+
+- Ogni inserzione è sempre Rossa
+
+- Ogni Path dalla Root al Leaf ha lo stesso numeo di neri
+
+- Nessun Path puó avere 2 nodi rossi consecutivi
+
