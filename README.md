@@ -207,11 +207,33 @@ Il RBTree segue 6 regole proncipali
 Per aggiustare il nostro albero quando si verificano situazioni di violazione, ovvero che le regole sopra citate non vengono rispettate utilizziamo :
 
 
-                Rebalance:
-                        Black Aunt Rotate : Bar
-                        Red Aunt ColorFlip : RAC
+                Rebalance: 
+                    se abbiamo nel nodo in cui si verifica la violazione
+                    abbiamo uno zio Nero :  applichiamo Black Aunt Rotate : Bar
+
+                    se abbiamo nel nodo in cui si verifica la violazione
+                    abbiamo uno zio Rosso : Red Aunt ColorFlip : RAC
+                    
                 Dopo Una Rotation il padre          dopo un ColorFlip il padre è rosso
                 è black e i figli sono rossi        e i figli sono neri 
                         BLACK                               RED
                         /   \                              /    \
                     RED        RED                      BLACK   BLACK
+
+Ci sono 4 tipi di rotazione: Left-Rotation, Right-Rotation, Left-Right-Rotation, Right-left-Rotation.
+
+                /
+               /
+Se in Balance abbiamo nel Nonno, left-child e left-subtree : applichiamo Right-Rotation.
+
+                \
+                 \
+Se in Balance abbiamo nel Nonno, right-child e right-subtree : applichiamo Left-Rotation.
+
+                /
+                \
+Se in Balance abbiamo nel Nonno, left-child e right-subtree : applichiamo Left-Right-Rotation.
+
+                    \
+                    /               
+Se in Balance abbiamo nel Nonno, right-child e left-subtree : applichiamo Right-Left-Rotation.
