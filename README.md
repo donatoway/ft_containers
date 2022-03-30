@@ -222,18 +222,18 @@ Per aggiustare il nostro albero quando si verificano situazioni di violazione, o
 
 Ci sono 4 tipi di rotazione: Left-Rotation, Right-Rotation, Left-Right-Rotation, Right-left-Rotation.
 
-                /
+                /       Right-Rotation
                /
 Se in Balance abbiamo nel Nonno, left-child e left-subtree : applichiamo Right-Rotation.
 
-                \
+                \       Left-Rotation
                  \
 Se in Balance abbiamo nel Nonno, right-child e right-subtree : applichiamo Left-Rotation.
 
-                /
+                /       Left-Right-Rotation
                 \
 Se in Balance abbiamo nel Nonno, left-child e right-subtree : applichiamo Left-Right-Rotation.
 
-                    \
+                    \   Right-Left-Rotation
                     /               
 Se in Balance abbiamo nel Nonno, right-child e left-subtree : applichiamo Right-Left-Rotation.
