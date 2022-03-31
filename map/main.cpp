@@ -9,7 +9,9 @@ int main()
     map<string, string> uomo;
    
 
-    uomo.insert(pair<string, string>("carlone", "cuoco"));
+    uomo.insert(pair<string, string>("angelo", "cuoco"));
+    uomo.insert(pair<string, string>("angeloo", "fabbro"));
+    uomo.insert(pair<string, string>("bino", "meccanico"));
 
     map<string, string>::iterator itr;
 
