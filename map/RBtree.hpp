@@ -34,19 +34,22 @@ namespace ft
         }
    };
 
-    //provare a implementare Tree immagazinando un solo valore successivamente adattarlo a map
+ //in map implementiamo pair e lo passiamo come value_type
     template<class value_type>
     class RBTree
     {
         public:
                 node *root;
         protected:
-                void rotateLeft(Node *&, Node *&);
-                void rotateRight(Node *&, Node *&);
-                void fixViolation(Node *&, Node *&);
+               // void rotateLeft(Node *&, Node *&);
+               // void rotateRight(Node *&, Node *&);
+               // void fixViolation(Node *&, Node *&);
         public:
                 RBTree(){root = NULL;};
-                void insert (const value_type &val);
+                void insert (const value_type &val)
+                {
+                    node *new_node<value_type> = new node<value_type>(val); 
+                }
     };
 };
 

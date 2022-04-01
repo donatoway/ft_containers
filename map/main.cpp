@@ -33,6 +33,7 @@ int main()
    Dinesh Khandelwal in comments **/
 #include <iostream>
 #include <queue>
+#include <utility>
 
 using namespace std;
  
@@ -97,13 +98,17 @@ Node<value>* BSTInsert(Node<value>* root, Node<value> *pt)
        return pt;
  
     /* Otherwise, recur down the tree */
+   // std::cout << pt->data.second;
+   // std::cout << root->data.second;
     if (pt->data < root->data)
     {
+        std::cout << "ciao";
         root->left  = BSTInsert(root->left, pt);
         root->left->parent = root;
     }
     else if (pt->data > root->data)
     {
+        std::cout << "dino";
         root->right = BSTInsert(root->right, pt);
         root->right->parent = root;
     }
@@ -312,7 +317,13 @@ void RBTree<value>::levelOrder()  {  levelOrderHelper(root); }
 // Driver Code
 int main()
 {
-    RBTree<std::string> tree;
+    std::pair<int, std::string>     pair_val;
+    pair_val = std::make_pair(10, "ciao");
+
+    std::pair<int, std::string>     pair_val2;
+    pair_val2 = std::make_pair(10, "dino");
+
+    RBTree<std::pair<int, std::string> > tree;
  
    /* tree.insert(7);
     tree.insert(6);
@@ -323,15 +334,15 @@ int main()
     tree.insert(1);
  */
 
-    tree.insert("alberto");
-    tree.insert("zorro");
-    tree.insert("mino");
-    tree.insert("carlo");
+
+    tree.insert(pair_val);
+    tree.insert(pair_val2);
+
     cout << "Inorder Traversal of Created Tree\n";
-    tree.inorder();
+  //  tree.inorder();
  
     cout << "\n\nLevel Order Traversal of Created Tree\n";
-    tree.levelOrder();
+   // tree.levelOrder();
  
     return 0;
 }
