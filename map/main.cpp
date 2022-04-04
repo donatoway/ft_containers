@@ -56,24 +56,24 @@ struct  Node
 };
  
 // Class to represent Red-Black Tree
-template <class value, class alloc = std::allocator<Node<value> *> >
+template <class value/*, class alloc = std::allocator<Node<value> *> */>
 class RBTree
 {
     public:
     typedef value                                value_type;
-    typedef alloc                                allocator_type;
-    typedef typename allocator_type::pointer     pointer;
-    typedef typename allocator_type::size_type   size_type;
+//    typedef alloc                                allocator_type;
+//    typedef typename allocator_type::pointer     pointer;
+ //   typedef typename allocator_type::size_type   size_type;
 
 private:
-    pointer                             root;
-  //  Node<value_type>                     *node;
-    allocator_type                      _allocation;
-    size_type                            _size;
+ //   pointer                                 root;
+    Node<value_type>                        *root;
+ //   allocator_type                      _allocation;
+ //   size_type                            _size;
    // allocator_type allocation;
 public:
     // Constructor
-    RBTree(const allocator_type& Allocator = allocator_type()): _allocation(Allocator), _size(0) { root = _allocation.allocate(1);};
+    RBTree(){root =NULL;};
     public:
 
 
@@ -88,39 +88,37 @@ public:
         key-value di pair.
     */
 
-   pointer RBinsert(pointer root, Node<value_type> *pt)
+   Node<value_type> *RBinsert(Node<value_type> *root, Node<value_type> *pt)
    {
-      /* If the tree is empty, return a new node */
-
+       //Se è il primo elemento inserito ritorna pt
+        if (root == NULL)
+            return (pt);
+        //altrimenti se il nuovo nodo è minore mettilo a sinistra
+        if (pt->data < root->data)
+        {
+            root->left = RBinsert(root->left, pt);
+            root->left->parent = root;
+        }
+        // se il nuovo nodo è maggiore posizionalo a destra
+        else if (pt->data > root->data)
+        {
+            root->right = RBinsert(root->right, pt);
+          //  std::cout << root->right->data.first;
+            root->right->parent = root;
+           //  std::cout << root->right->parent->data.first;
+        }
+       // std::cout << root->right->data.first;
+    return (root);
    }
    void insert(const value_type &pair_val)
    {
        //Node<value_type> *pt = new Node<value_type>(pair_val);
         
-       Node <value_type> *pt =    new Node<value_type>(pair_val);
+        Node <value_type> *pt =    new Node<value_type>(pair_val);
 
-
-        //root = _allocation.allocate(1);
-        if (_size == 0)
-            _allocation.construct(root, pt);
-        else
-        {
-            _allocation.allocate(1);
-            if ((*root)->data < pt->data)
-            {
-                (*root)->right = pt;
-                (*root)->right->parent = (*root);
-               // (*root)
-            }
-            std::cout << "root : "<< (*root)->right->parent->data.first << "\n";
-            std::cout << "figlio : "<< (*root)->right->data.first << "\n";
-          //  std::cout << "----" <<(*root)->data.first << "\n";
-        }
-        _size++;
-
-        //continuare a implementare l'algoritmo di insert
-
-
+        root = RBinsert(root, pt);
+    //std::cout << root->right->data.first;
+        
    }
 
    void print()
@@ -152,7 +150,6 @@ int main()
     tree.insert(pair_val2);
     tree.insert(pair_val3);
     tree.insert(pair_val4);
-
    /* tree.insert(7);
     tree.insert(6);
     tree.insert(5);
