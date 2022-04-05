@@ -277,11 +277,10 @@ int main()
     tree.insert(2);
     tree.insert(1);
  
-  /*  cout << "Inorder Traversal of Created Tree\n";
+   cout << "Inorder Traversal of Created Tree\n";
     tree.inorder();
  
     cout << "\n\nLevel Order Traversal of Created Tree\n";
     tree.levelOrder();
- */
     return 0;
 }
