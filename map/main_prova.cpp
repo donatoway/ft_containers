@@ -5,19 +5,21 @@
    Dinesh Khandelwal in comments **/
 #include <iostream>
 #include <queue>
+#include <utility>
 
 using namespace std;
  
 enum Color {RED, BLACK};
  
+ template <class value_type>
 struct Node
 {
-    int data;
+    value_type data;
     bool color;
     Node *left, *right, *parent;
  
     // Constructor
-    Node(int data)
+    Node(value_type data)
     {
        this->data = data;
        left = right = parent = NULL;
@@ -26,37 +28,41 @@ struct Node
 };
  
 // Class to represent Red-Black Tree
+template <class value_type>
 class RBTree
 {
 private:
-    Node *root;
+    Node<value_type> *root;
 protected:
-    void rotateLeft(Node *&, Node *&);
-    void rotateRight(Node *&, Node *&);
-    void fixViolation(Node *&, Node *&);
+    void rotateLeft(Node<value_type> *&, Node<value_type> *&);
+    void rotateRight(Node<value_type> *&, Node<value_type> *&);
+    void fixViolation(Node<value_type> *&, Node<value_type> *&);
 public:
     // Constructor
     RBTree() { root = NULL; }
-    void insert(const int &n);
+    void insert(const value_type &n);
     void inorder();
     void levelOrder();
 };
  
 // A recursive function to do inorder traversal
-void inorderHelper(Node *root)
+template <class value_type>
+void inorderHelper(Node<value_type> *root)
 {
     if (root == NULL)
         return;
  
     inorderHelper(root->left);
-    cout << root->data << "  ";
+    cout << root->data.first << "  ";
     inorderHelper(root->right);
 }
  
 /* A utility function to insert
     a new node with given key
+
    in BST */
-Node* BSTInsert(Node* root, Node *pt)
+template <class value_type>
+Node<value_type>* BSTInsert(Node<value_type>* root, Node<value_type> *pt)
 {
     /* If the tree is empty, return a new node */
     if (root == NULL)
@@ -79,18 +85,19 @@ Node* BSTInsert(Node* root, Node *pt)
 }
  
 // Utility function to do level order traversal
-void levelOrderHelper(Node *root)
+template <class value_type>
+void levelOrderHelper(Node<value_type> *root)
 {
     if (root == NULL)
         return;
  
-    std::queue<Node *> q;
+    std::queue< Node<value_type> *> q;
     q.push(root);
  
     while (!q.empty())
     {
-        Node *temp = q.front();
-        cout << temp->data << "  ";
+         Node<value_type> *temp = q.front();
+        cout << temp->data.first << "  ";
         q.pop();
  
         if (temp->left != NULL)
@@ -101,9 +108,10 @@ void levelOrderHelper(Node *root)
     }
 }
  
-void RBTree::rotateLeft(Node *&root, Node *&pt)
+ template <class value_type>
+void RBTree<value_type>::rotateLeft(Node<value_type> *&root, Node<value_type> *&pt)
 {
-    Node *pt_right = pt->right;
+     Node<value_type> *pt_right = pt->right;
  
     pt->right = pt_right->left;
  
@@ -124,10 +132,10 @@ void RBTree::rotateLeft(Node *&root, Node *&pt)
     pt_right->left = pt;
     pt->parent = pt_right;
 }
- 
-void RBTree::rotateRight(Node *&root, Node *&pt)
+  template <class value_type>
+void RBTree<value_type>::rotateRight(Node<value_type> *&root, Node<value_type> *&pt)
 {
-    Node *pt_left = pt->left;
+     Node<value_type> *pt_left = pt->left;
  
     pt->left = pt_left->right;
  
@@ -151,10 +159,11 @@ void RBTree::rotateRight(Node *&root, Node *&pt)
  
 // This function fixes violations
 // caused by BST insertion
-void RBTree::fixViolation(Node *&root, Node *&pt)
+ template <class value_type>
+void RBTree<value_type>::fixViolation(Node<value_type> *&root, Node<value_type> *&pt)
 {
-    Node *parent_pt = NULL;
-    Node *grand_parent_pt = NULL;
+    Node<value_type> *parent_pt = NULL;
+    Node<value_type> *grand_parent_pt = NULL;
  
     while ((pt != root) && (pt->color != BLACK) &&
            (pt->parent->color == RED))
@@ -169,7 +178,7 @@ void RBTree::fixViolation(Node *&root, Node *&pt)
         if (parent_pt == grand_parent_pt->left)
         {
  
-            Node *uncle_pt = grand_parent_pt->right;
+             Node<value_type> *uncle_pt = grand_parent_pt->right;
  
             /* Case : 1
                The uncle of pt is also red
@@ -210,7 +219,7 @@ void RBTree::fixViolation(Node *&root, Node *&pt)
            of Grand-parent of pt */
         else
         {
-            Node *uncle_pt = grand_parent_pt->left;
+            Node<value_type> *uncle_pt = grand_parent_pt->left;
  
             /*  Case : 1
                 The uncle of pt is also red
@@ -250,9 +259,10 @@ void RBTree::fixViolation(Node *&root, Node *&pt)
 }
  
 // Function to insert a new node with given data
-void RBTree::insert(const int &data)
+ template <class value_type>
+void RBTree<value_type>::insert(const value_type &data)
 {
-    Node *pt = new Node(data);
+    Node<value_type> *pt = new Node<value_type>(data);
  
     // Do a normal BST insert
     root = BSTInsert(root, pt);
@@ -261,26 +271,28 @@ void RBTree::insert(const int &data)
 }
  
 // Function to do inorder and level order traversals
-void RBTree::inorder()     {  inorderHelper(root);}
-void RBTree::levelOrder()  {  levelOrderHelper(root); }
+ template <class value_type>
+void RBTree<value_type>::inorder()     {  inorderHelper(root);}
+ template <class value_type>
+void RBTree<value_type>::levelOrder()  {  levelOrderHelper(root); }
  
 // Driver Code
 int main()
 {
-    RBTree tree;
+   std::pair<int, std::string>     pair_val;
+    pair_val = std::make_pair(10, "ciao");
+
+
+    RBTree<std::pair<int, std::string> > tree;
  
-    tree.insert(7);
-    tree.insert(6);
-    tree.insert(5);
-    tree.insert(4);
-    tree.insert(3);
-    tree.insert(2);
-    tree.insert(1);
+    tree.insert(pair_val);
+  
  
-   cout << "Inorder Traversal of Created Tree\n";
+  /* cout << "Inorder Traversal of Created Tree\n";
     tree.inorder();
  
     cout << "\n\nLevel Order Traversal of Created Tree\n";
     tree.levelOrder();
+*/
     return 0;
 }

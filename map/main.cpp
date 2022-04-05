@@ -33,7 +33,7 @@ int main()
    Dinesh Khandelwal in comments **/
 #include <iostream>
 #include <queue>
-#include <utility>
+#include <algorithm>
 
 using namespace std;
  
@@ -111,9 +111,9 @@ public:
         return (root);
     }
 
-    void rotateRight(Node *&root, Node *&pt)
+    void rotateRight(Node<value_type> *&root, Node<value_type> *&pt)
     {
-        Node *pt_left = pt->left;   // variabile tmp
+        Node<value_type> *pt_left = pt->left;   // variabile tmp
 
         pt->left = pt_left->right; // il figlio sinistro diventa destro
 
@@ -128,6 +128,26 @@ public:
             pt->parent->right = pt_left; // altrimenti il figlio destro diventa la tmp creata
         pt_left->right = pt; // la tmp diventa pt
         pt->parent = pt_left; // il genitore di pt diventa la tmp
+    }
+
+    void rotateLeft(Node<value_type> *&root, Node<value_type> *&pt)
+    {
+        Node<value_type> *pt_right = pt->right; // tmp
+        pt->right = pt_right->left; // il figlio destro diventa il figlio sinistro
+
+        if (pt->right != NULL) // se è presente un figlio destro
+            pt->right->parent = pt; // il padre del figlio destro diventa pt
+        
+        pt_right->parent = pt->parent; // tmp diventa il padre di pt
+        if (pt->parent == NULL) // se non è presente nessun padre di pt
+            root = pt_right; //root diventa la tmp
+        else if (pt == pt->parent->left) // altrimenti se il fratello di pt non è qualcos'altro
+            pt->parent->left = pt_right; // il figlio sinistro diventa destro
+        else
+            pt->parent->right = pt_right; // altrimenti se è qualcos'altro il figlio destro diventa la tmp
+        pt_right->left = pt; //la tmp == pt
+        pt->parent = pt_right; // il padre di pt diviene la nuova tmp
+
     }
 
     void fixViolation(Node<value_type> *&root, Node<value_type> *&pt)
@@ -189,14 +209,14 @@ public:
             }
             else
             {
-                Node *uncle_pt = grand_parent_pt->left;
+                Node<value_type> *uncle_pt = grand_parent_pt->left;
                 /*
                     Case : 1
                     se Lo zio di pt è rosso è richiesto solo il colorflip 
                 */
                 if ((uncle_pt != NULL) && (uncle_pt->color == RED))
                 {
-                    grand_parent_pt->color-> = RED;
+                    grand_parent_pt->color = RED;
                     parent_pt->color = BLACK;
                     uncle_pt->color = BLACK;
                     pt = grand_parent_pt;
@@ -218,7 +238,7 @@ public:
                         Case : 3
                         se pt è il figlio destro di suo padre si applica una Left-Rotation
                    */
-                    rotaetLeft(root, grand_parent_pt);
+                    rotateLeft(root, grand_parent_pt);
                     swap(parent_pt->color, grand_parent_pt->color);
                     pt = parent_pt;
                 }
@@ -233,7 +253,7 @@ public:
             return;
     
         inorderHelper(root->left);
-        cout << root->data.first << "  ";
+        cout << root->data.first <<  " " << root->data.second << "  ";
         inorderHelper(root->right);
     }
 
@@ -244,10 +264,7 @@ public:
             root = RBinsert(root, pt);
 
             // Aggiusta la violazione
-            fixViolation(root, pt);
-
-           
-            
+           fixViolation(root, pt);    
     }
 
    void print()
@@ -261,21 +278,23 @@ public:
 // Driver Code
 int main()
 {
-    std::pair<int, std::string>     pair_val;
-    pair_val = std::make_pair(10, "ciao");
+    std::pair<std::string, std::string>     pair_val;
+    pair_val = std::make_pair("alberto", "ciaz");
 
-    std::pair<int, std::string>     pair_val2;
-    pair_val2 = std::make_pair(20, "dino");
+    std::pair<std::string, std::string>     pair_val2;
+    pair_val2 = std::make_pair("alberto", "ciao");
 
-     std::pair<int, std::string>     pair_val3;
-    pair_val3 = std::make_pair(30, "dino");
+     std::pair<std::string, std::string>     pair_val3;
+    pair_val3 = std::make_pair("pino", "dino");
 
-    std::pair<int, std::string>     pair_val4;
-    pair_val4 = std::make_pair(40, "dino");
+    std::pair<std::string, std::string>     pair_val4;
+    pair_val4 = std::make_pair("osvaldo", "dino");
 
-    RBTree<std::pair<int, std::string> > tree;
-     tree.insert(pair_val2);
+    RBTree<std::pair<std::string, std::string> > tree;
+
+     tree.insert(pair_val4);
     tree.insert(pair_val);
+    tree.insert(pair_val2);
 
     tree.print();
    // tree.insert(pair_val3);
@@ -289,7 +308,6 @@ int main()
     tree.insert(1);
  */
 
-
  //   tree.insert(pair_val);
  //   tree.insert(pair_val2);
 
@@ -299,5 +317,9 @@ int main()
   //  cout << "\n\nLevel Order Traversal of Created Tree\n";
    // tree.levelOrder();
  
+
+
+
+    //completare la classe 
     return 0;
 }
