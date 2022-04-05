@@ -111,6 +111,25 @@ public:
         return (root);
     }
 
+    void rotateRight(Node *&root, Node *&pt)
+    {
+        Node *pt_left = pt->left;   // variabile tmp
+
+        pt->left = pt_left->right; // il figlio sinistro diventa destro
+
+        if (pt->left != NULL) // se è un figlio sinistro
+            pt->left->parent = pt; // il genitore diventa pt (nuovo nodo)
+        pt_left->parent = pt->parent; // la tmp->padre == il nuovo pt padre
+        if (pt->parent == NULL) // se c'è un padre 
+            root = pt_left; // la root diventa la tmp creata
+        else if (pt == pt->parent->left) // altrimenti se pt è figlio sinistro
+            pt->parent->left = pt_left; // il figlio sinistro diventa la tmp creata
+        else
+            pt->parent->right = pt_left; // altrimenti il figlio destro diventa la tmp creata
+        pt_left->right = pt; // la tmp diventa pt
+        pt->parent = pt_left; // il genitore di pt diventa la tmp
+    }
+
     void fixViolation(Node<value_type> *&root, Node<value_type> *&pt)
     {
         Node<value_type> *parent_pt = NULL;
