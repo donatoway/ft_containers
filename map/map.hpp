@@ -2,6 +2,8 @@
 #define MAP_HPP
 #include <iostream>
 #include <memory>
+#include "RBtree.hpp"
+#include "pair.hpp"
 
 
 /*
@@ -12,7 +14,7 @@
 */
 namespace ft
 {      /* Tipo della chiave - Mapped value - key_compare - allocazione allocator_type */
-    template < class Key,  class T,  class Compare = std::less<Key>, class Alloc = std::allocator<std::pair<const Key,T> > >
+    template < class Key,  class T,  class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key,T> > >
     class map
     {
         typedef typename    Key                                     key_type;
