@@ -261,7 +261,7 @@ namespace ft
                         root = RBinsert(root, pt);
 
                         // Aggiusta la violazione
-                    fixViolation(root, pt);    
+                        fixViolation(root, pt);    
                 }
 
             void print()
