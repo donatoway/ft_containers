@@ -4,6 +4,8 @@
 #include <iostream>
 #include "pair.hpp"
 #include "RBtree.hpp"
+#include "Tree_iterator.hpp"
+
 
 
 namespace ft
@@ -12,15 +14,18 @@ namespace ft
     class map
     {
         public:
-                typedef                 Key                         key_type;
-                typedef                 Compare                     Key_compare;
-                typedef                 T                           mapped_type;
-                typedef      typename   ft::pair<Key, T>            value_type;
-                typedef      typename   std::size_t                 size_type;
-                typedef                 Allocator                   allocator_type;
-                typedef      typename   allocator_type::pointer     pointer;
-                typedef      typename   ft::RBTree<value_type>     tree;
+                typedef                 Key                             key_type;
+                typedef                 Compare                         Key_compare;
+                typedef                 T                               mapped_type;
+                typedef      typename   ft::pair<Key, T>                value_type;
+                typedef      typename   std::size_t                     size_type;
+                typedef                 Allocator                       allocator_type;
+                typedef      typename   allocator_type::pointer         pointer;
+                typedef      typename   ft::RBTree<value_type>               tree;
+                typedef      typename   ft::Tree_iterator<value_type>::tree map_iterator;
+
         private:
+                map_iterator             _first;
                 tree                    _tree;
                 pointer                 _map;
                 allocator_type          _allocation;
@@ -56,6 +61,16 @@ namespace ft
                     this->_map = _tree;
                 }
 
+                //assign
+                map &operator=(const map &map)
+                {
+                    this->_map = map._map;
+                    this->_allocation = map._allocation;
+                    this->_tree = map._tree;
+                    this->_size = map._size;
+                    return (*this);
+                }
+
                 void print(Node<value_type> *_map)
                 {
                     if (_map == NULL)
@@ -72,7 +87,7 @@ namespace ft
             //--------------------- ITERATOR ------------------------------
 
 
-
+                map_iterator begin(){while   return map_iterator(_tree);};
 
 
 

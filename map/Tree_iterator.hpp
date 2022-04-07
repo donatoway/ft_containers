@@ -7,26 +7,30 @@
 
 namespace ft
 {
-    template < class  key>
+    template < class  value>
     class Tree_iterator
     {
         public:
-                typedef key                                         value_type;
-           //     typedef V                                         mapped_type;
-                typedef   ft::Node<value_type>                      pointer;
+                typedef     value                                   value_type; //coppia
+                typedef     ft::RBTree<value_type>                  tree;       //tree
 
         public:
-                pointer _root;
-        
-
+                tree iter;
         public:
-                Tree_iterator()
+                //Costruttore vuoto
+                Tree_iterator() {};
+
+                //Costruttore Con un Tree
+                Tree_iterator(const tree &obj)
                 {
-                    _root;
+                    iter.root = obj.root;
                 }
-
-
-
+                //Assegnazione
+                Tree_iterator& operator=(const Tree_iterator& obj)
+                {
+                    this->iter = obj.iter;
+                    return (*this);
+                }
     };
 };
 

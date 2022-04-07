@@ -7,12 +7,14 @@
 #include <map>
 #include <string>
 #include <iomanip>
+#include "Tree_iterator.hpp"
+
 //#include "Tree_iterator.hpp"
 
 
 int main()
 {
-
+/*
   std::pair<int, int> qq;
 
   qq = std::make_pair(10,9);
@@ -48,58 +50,34 @@ int main()
   {
     std::cout << *a << "\n";
   }
-  
-  /* ft::pair<std::string, std::string>     pair_val;
-
-    pair_val = ft::make_pair("1","2");
-
-    ft::pair<std::string, std::string>     pair_val2;
-    pair_val2 = ft::make_pair("alberto", "ciao");
-
-     ft::pair<std::string, std::string>     pair_val3;
-    pair_val3 = ft::make_pair("alberto", "zorro");
-
-    ft::pair<std::string, std::string>     pair_val4;
-    pair_val4 = ft::make_pair("osvaldo", "dino");
-    ft::map<std::string, std::string> m;
-  
-
-    
-      m.print2();
-    */
-
-  /*  std::pair<std::string, int> p;
-    p = std::make_pair("a", 1);
-
-    std::pair<std::string, int> p2;
-    p2 = std::make_pair("b", 2);
-
-
-    std::map<std::string, int> map1;
-    map1.insert(p);
-    map1.insert(p2);
-
-    std::map<std::string, int> iter(map1.begin(), map1.end());
-    std::cout << "\niter = "; print_map(iter);
-    std::cout << "map1 = "; print_map(map1);
   */
- /*   ft::pair<std::string, int> p;
-    p = ft::make_pair("a", 1);
-
-    ft::pair<std::string, int> p2;
-    p2 = ft::make_pair("b", 2);
 
 
-    ft::map<std::string, int> map1;
-    map1.insert(p);
-    map1.insert(p2);
 
-     ft::map<std::string, int> iter(map1.begin("anything"), map1.end());
+    ft::pair<int, int>   pai;
 
-    std::cout << "\niter = "; print_map(iter);
-  */
-    //continuare a costruire i costruttori di map
+    pai = ft::make_pair(10, 10);
 
-    
-    return 0;
+    ft::RBTree<ft::pair<int, int> >    a;
+    ft::map<int, int>   map1;
+
+    map1.insert(pai);
+
+    a.insert(pai);
+   // a.print();
+
+    ft::Tree_iterator<ft::pair<int, int> > it(a);
+
+
+   // std::cout << it.iter.root->data.first << "\n";
+    it = map1.begin();
+
+    std::cout << it.iter.root->data.first << "\n";
+
+
+  //- continuare ad implementare Tree_iterator
+  //- begin deve ritornare il tree left left ecc. cioe il primo elemento
+  //- l'iterator deve corrispondere nodo e al pair value
+
+
 }
