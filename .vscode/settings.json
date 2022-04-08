@@ -67,6 +67,7 @@
         "__tree": "cpp",
         "__functional_03": "cpp",
         "deque": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "iomanip": "cpp"
     }
 }

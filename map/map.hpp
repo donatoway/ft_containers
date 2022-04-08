@@ -21,12 +21,12 @@ namespace ft
                 typedef      typename   std::size_t                     size_type;
                 typedef                 Allocator                       allocator_type;
                 typedef      typename   allocator_type::pointer         pointer;
-                typedef      typename   ft::RBTree<value_type>               tree;
-                typedef      typename   ft::Node<value_type>            *map_iterator;
+                typedef      typename   ft::RBTree<value_type>          tree;
+                typedef      typename   ft::Tree_iterator<value_type>   map_iterator;
 
 
         private:
-                map_iterator             _first;
+                pointer                 _first;
                 tree                    _tree;
                 pointer                 _map;
                 allocator_type          _allocation;
@@ -37,6 +37,7 @@ namespace ft
                 {
                     _allocation.allocate(0);
                     _size = 0;
+                    _first = NULL;
                 }
 
                 // Range constructor
@@ -87,7 +88,13 @@ namespace ft
 
             //--------------------- ITERATOR ------------------------------
 
-                map_iterator begin(){return map_iterator(_first.data);};
+                //creare una funzione che itera _first fino al nodo piu basso
+                //prima finire di implementare tutta tree_iterator
+                //correggere costruttori
+                map_iterator begin(){return map_iterator(_first);};
+
+
+
 
                 void print2(){print(_map);};
                 

@@ -14,81 +14,53 @@
 
 int main()
 {
+
+
 /*
-  std::pair<int, int> qq;
+  ft::pair<int, int> a; //value_type
+  a = ft::make_pair(10, 9); // first, second
+  ft::Node<ft::pair<int, int> > *node = new ft::Node<ft::pair<int, int> >(a);
+  ft::pair<int, int> *it;
+  it = &node->data; //it = begin();
+  std::cout << it->first << "\n";
+*/
 
-  qq = std::make_pair(10,9);
+  ft::map<int, int> map1;
 
-  std::pair<int, int> qq2;
+  ft::pair<int, int> pair;
+  pair = ft::make_pair(10, 9);
 
-  qq2 = std::make_pair(20,9);
+  map1.insert(pair);
 
-   std::pair<int, int> qq3;
-
-  qq3 = std::make_pair(30,9);
-
-    std::pair<int, int> qq4;
-
-  qq4 = std::make_pair(40,9);
-
-
-  std::map<int, int> map1;
-
-  map1.insert(qq);
-  map1.insert(qq2);
-  map1.insert(qq3);
-  map1.insert(qq4);
-
-
-
-  std::map<int, int>::iterator a;
-
-
-
-
-  for (a = map1.begin() ; a != map1.end(); a++)
+  for (size_t i = 0; i < 10; i++)
   {
-    std::cout << *a << "\n";
+    ft::pair<int, int> pair;
+    pair = ft::make_pair(i, i);
+    map1.insert(pair);
+
   }
-  */
+  
 
-    ft::pair<int, int>   pai;
-
-    pai = ft::make_pair(10, 10);
-
-    ft::RBTree<ft::pair<int, int> >    a;
-    ft::map<int, int>   map1;
-
-    map1.insert(pai);
-
-    a.insert(pai);
-   // a.print();
-
-    ft::map<int,int>::map_iterator it;
-
-    it = map1.begin();
-    //std::cout << it-> << "\n";
-   // it = map1.begin();
-
-   // std::cout << it.node->data.first << "\n";
+  ft::map<int, int>::map_iterator it;
 
 
-   std::pair<int, int>   pai2;
+  it = map1.begin();
+  
+  std::cout << it->first << "\n";
 
-    pai2 = std::make_pair(200, 10);
-    std::map<int, int>   map2;
 
-  map2.insert(pai2);
 
-  std::map<int, int>::iterator it2;
+ 
+// 1) it equivale ad un ft::pair o value_type
+// 2) node->data equivale al return di begin
+// 3) ft::tree_iterator node equivale al puntatore nodo da iterare
 
-  it2 = map2.begin();
 
-  std::cout << it2->first << "\n";
 
-  //- continuare ad implementare Tree_iterator
-  //- begin deve ritornare il tree left left ecc. cioe il primo elemento
-  //- l'iterator deve corrispondere nodo e al pair value
-
+ /*
+    //creare una funzione che itera _first fino al nodo piu basso
+    //prima finire di implementare tutta tree_iterator
+    //correggere costruttori ecc. ed aggiungere tutte le altre cose
+ */
 
 }
