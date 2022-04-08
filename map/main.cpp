@@ -52,8 +52,6 @@ int main()
   }
   */
 
-
-
     ft::pair<int, int>   pai;
 
     pai = ft::make_pair(10, 10);
@@ -66,14 +64,27 @@ int main()
     a.insert(pai);
    // a.print();
 
-    ft::Tree_iterator<ft::pair<int, int> > it(a);
+    ft::map<int,int>::map_iterator it;
 
-
-   // std::cout << it.iter.root->data.first << "\n";
     it = map1.begin();
+    //std::cout << it-> << "\n";
+   // it = map1.begin();
 
-    std::cout << it.iter.root->data.first << "\n";
+   // std::cout << it.node->data.first << "\n";
 
+
+   std::pair<int, int>   pai2;
+
+    pai2 = std::make_pair(200, 10);
+    std::map<int, int>   map2;
+
+  map2.insert(pai2);
+
+  std::map<int, int>::iterator it2;
+
+  it2 = map2.begin();
+
+  std::cout << it2->first << "\n";
 
   //- continuare ad implementare Tree_iterator
   //- begin deve ritornare il tree left left ecc. cioe il primo elemento
