@@ -22,11 +22,12 @@ namespace ft
                 typedef                 Allocator                       allocator_type;
                 typedef      typename   allocator_type::pointer         pointer;
                 typedef      typename   ft::RBTree<value_type>          tree;
-                typedef      typename   ft::Tree_iterator<value_type>   map_iterator;
+                typedef      typename   ft::Map_iterator<value_type>    iterator;
 
 
         private:
                 pointer                 _first;
+                pointer                 _end;
                 tree                    _tree;
                 pointer                 _map;
                 allocator_type          _allocation;
@@ -91,7 +92,15 @@ namespace ft
                 //creare una funzione che itera _first fino al nodo piu basso
                 //prima finire di implementare tutta tree_iterator
                 //correggere costruttori
-                map_iterator begin(){return map_iterator(_first);};
+                iterator begin()
+                {
+                    return iterator(_first);
+                }
+
+                iterator end()
+                {
+                    return iterator(_end);
+                }
 
 
 
@@ -103,7 +112,17 @@ namespace ft
                     _size++;
                     _tree.insert(value);
                     _map =_tree.root;
-                    _first = _map;
+                    _first = _tree.root;
+                    _end = _tree.root;
+                    while (_first->left)
+                    {
+                        _first = _first->left;
+                    }
+                    while (_end->right)
+                    {
+                        _end = _end->right;
+                    }
+                    
                 }
 
                 ~map()

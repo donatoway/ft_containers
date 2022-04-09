@@ -32,7 +32,7 @@ int main()
 
   map1.insert(pair);
 
-  for (size_t i = 0; i < 10; i++)
+  for (size_t i = 4; i < 10; i++)
   {
     ft::pair<int, int> pair;
     pair = ft::make_pair(i, i);
@@ -41,15 +41,46 @@ int main()
   }
   
 
-  ft::map<int, int>::map_iterator it;
+  ft::map<int, int>::iterator it;
 
 
   it = map1.begin();
+  it++;
+  //std::cout << it->first << "\n";
+
+  for (it = map1.begin(); it != map1.end(); it++)
+  {
+    /* code */
+  }
   
-  std::cout << it->first << "\n";
+  
+  
+
+/*
+std::map<int, int> map1;
+
+  std::pair<int, int> pair;
+  pair = std::make_pair(10, 9);
+
+  map1.insert(pair);
+
+  for (size_t i = 0; i < 10; i++)
+  {
+    std::pair<int, int> pair;
+    pair = std::make_pair(i, i);
+    map1.insert(pair);
+
+  }
+  
+
+  std::map<int, int>::iterator it;
 
 
-
+  for (it = map1.begin() ; it != map1.end(); it++)
+  {
+     std::cout << it->first << "\n";
+  }
+  */
  
 // 1) it equivale ad un ft::pair o value_type
 // 2) node->data equivale al return di begin
