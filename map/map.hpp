@@ -14,15 +14,16 @@ namespace ft
     class map
     {
         public:
-                typedef                 Key                             key_type;
-                typedef                 Compare                         Key_compare;
-                typedef                 T                               mapped_type;
-                typedef      typename   ft::pair<Key, T>                value_type;
-                typedef      typename   std::size_t                     size_type;
-                typedef                 Allocator                       allocator_type;
-                typedef      typename   allocator_type::pointer         pointer;
-                typedef      typename   ft::RBTree<value_type>          tree;
-                typedef      typename   ft::Map_iterator<value_type>    iterator;
+                typedef                 Key                                 key_type;
+                typedef                 Compare                             Key_compare;
+                typedef                 T                                   mapped_type;
+                typedef      typename   ft::pair<Key, T>                    value_type;
+                typedef      typename   std::size_t                         size_type;
+                typedef                 Allocator                           allocator_type;
+                typedef      typename   allocator_type::pointer             pointer;
+                typedef      typename   ft::RBTree<value_type>              tree;
+                typedef      typename   ft::Map_iterator<value_type>        iterator;
+                typedef      typename   ft::ConstMap_iterator<value_type>   Map_iterator_const;
 
 
         private:
@@ -92,15 +93,15 @@ namespace ft
                 //creare una funzione che itera _first fino al nodo piu basso
                 //prima finire di implementare tutta tree_iterator
                 //correggere costruttori
-                iterator begin()
-                {
-                    return iterator(_first);
-                }
 
-                iterator end()
-                {
-                    return iterator(_end);
-                }
+            
+                Map_iterator_const begin(void)const{ return Map_iterator_const(_first);};
+
+                iterator begin() {return iterator(_first);};
+
+                iterator end(){return iterator(_end);};
+
+                Map_iterator_const end()const{ return Map_iterator_const(_end);};
 
 
 
@@ -114,17 +115,11 @@ namespace ft
                     _map =_tree.root;
                     _first = _tree.root;
                     _end = _tree.root;
-                    
                     while (_first->left)
-                    {
                         _first = _first->left;
-                    }
-
-                 //   std::cout << _first->data.first << " " <<_first->data.second << " _first\n";
                     while (_end->right)
-                    {
                         _end = _end->right;
-                    }
+                 //   std::cout << _first->data.first << " " <<_first->data.second << " _first\n";
 
                  //   std::cout << _end->data.first << " " << _first->data.second << "_end \n\nelemento n " << _size<<"\n";
 

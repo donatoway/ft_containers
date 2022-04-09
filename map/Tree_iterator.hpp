@@ -11,8 +11,8 @@ namespace ft
     class Map_iterator
     {
         public:
-                typedef     value                                           value_type; //coppia
-                typedef     typename ft::Node<value_type>*                  iterator;       //tree
+                typedef     value                                           value_type;
+                typedef     typename ft::Node<value_type>*                  iterator;
                 typedef     value_type*                                     pointer;
                 typedef     value_type&                                     reference;
 
@@ -25,7 +25,7 @@ namespace ft
                 Map_iterator(){};
 
                 //Costruttore di default che ha come parametro un nodo e ne costruisce
-                //Un iteratore con un nodo che punta allo stesso nodo
+                //Map_iterator con un nodo che punta allo stesso nodo
                 Map_iterator(Node<value_type> *obj){node = obj;};
 
                 //Copy Constructor : crea un const map_iterator che punta allo stesso nodo
@@ -97,9 +97,115 @@ namespace ft
                    this->operator--();
                    return (tmp);
                 }
-            bool operator==(const Map_iterator& bst_it) { return (this->_node == bst_it.node); };
-            bool operator!=(const Map_iterator& bst_it) { return (this->node != bst_it.node); };     
+        
+                bool operator==(const Map_iterator& bst_it) { return (this->_node == bst_it.node); };
+                bool operator!=(const Map_iterator& bst_it) { return (this->node != bst_it.node); };     
+                bool operator>(const Map_iterator& bst_it) { return (this->node > bst_it.node);};
+                bool operator<(const Map_iterator& bst_it){return (this->node < bst_it.node);};		
+                bool operator>=(const Map_iterator& bst_it){return (this->node >= bst_it.node);};
+                bool operator<=(const Map_iterator& bst_it){return (this->node <= bst_it.node);};
+    };
+
+
+    template < class  value>
+    class ConstMap_iterator
+    {
+        public:
+                typedef     value                                           value_type;
+                typedef     typename ft::Node<value_type>*                  iterator;      
+                typedef     value_type*                                     pointer;
+                typedef     value_type&                                     reference;
+
+        private:
+                iterator      node;
+        public:
+
+        // --------------- CONSTRUCTOR -------------------------
+                //Costruttore vuoto
+                ConstMap_iterator():node(0){};
+
+                //Costruttore di default che ha come parametro un nodo e ne costruisce
+                //Map_iterator con un nodo che punta allo stesso nodo
+                ConstMap_iterator(const iterator &obj): node(obj) {};
+
+                //Copy Constructor : crea un const map_iterator che punta allo stesso nodo
+                ConstMap_iterator(const ConstMap_iterator &obj){node = obj.node;}
+
+                //Assegnazione
+                ConstMap_iterator& operator=(const ConstMap_iterator& obj)
+                {
+                    this->node = obj.node;
+                    return (*this);
+                }
+          // ----------------- OPEARATOR -------------------------
+                //pointer and reference  
+                reference       operator*() { return node->data; }const
+                pointer         operator->() { return &node->data; }const
+
+                ConstMap_iterator    &operator++(void)
+                {
+                    iterator next;
+                    if (!node->right)
+                    {
+                        next = node;
+                        while (next->parent && next == next->parent->right)
+                            next = next->parent;
+                        next = next->parent;
+                    }
+                    else
+                    {
+                        next = node->right;
+                        while (next->left)
+                            next = next->left;
+                    }
+                    if (next != NULL)
+                        this->node = next;
+                    return (*this);
+                };
+
+                ConstMap_iterator    operator++(int)
+                {
+                   ConstMap_iterator tmp(*this);
+                   this->operator++();
+                   return (tmp);
+                };
+
+                ConstMap_iterator   &operator--(void)
+                {
+                    iterator previous;
+                    if (!node->left)
+                    {
+                        previous = node;
+                        while (previous->parent && previous == previous->parent->left)
+                            previous = previous->parent;
+                        previous = previous->parent;
+                    }
+                    else
+                    {
+                        previous = node->left;
+                        while (previous->right)
+                            previous = previous->right;
+                    }
+                    if (previous != NULL)
+                        this->node = previous;
+                    return (*this);
+                };
+
+                ConstMap_iterator operator--(int)
+                {
+                    ConstMap_iterator tmp(*this);
+                    this->operator--();
+                    return (tmp);
+                }
+        
+                bool operator==(const ConstMap_iterator& bst_it) { return (this->_node == bst_it.node); };
+                bool operator!=(const ConstMap_iterator& bst_it) { return (this->node != bst_it.node); };     
+                bool operator>(const ConstMap_iterator& bst_it) { return (this->node > bst_it.node);};
+                bool operator<(const ConstMap_iterator& bst_it){return (this->node < bst_it.node);};		
+                bool operator>=(const ConstMap_iterator& bst_it){return (this->node >= bst_it.node);};
+                bool operator<=(const ConstMap_iterator& bst_it){return (this->node <= bst_it.node);};
     };
 };
+
 
 #endif
