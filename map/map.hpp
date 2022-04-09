@@ -114,14 +114,20 @@ namespace ft
                     _map =_tree.root;
                     _first = _tree.root;
                     _end = _tree.root;
+                    
                     while (_first->left)
                     {
                         _first = _first->left;
                     }
+
+                 //   std::cout << _first->data.first << " " <<_first->data.second << " _first\n";
                     while (_end->right)
                     {
                         _end = _end->right;
                     }
+
+                 //   std::cout << _end->data.first << " " << _first->data.second << "_end \n\nelemento n " << _size<<"\n";
+
                     
                 }
 

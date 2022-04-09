@@ -17,7 +17,7 @@ namespace ft
                 typedef     value_type&                                     reference;
 
         private:
-                Node<value_type>     *node;
+                iterator      node;
         public:
 
         // --------------- CONSTRUCTOR -------------------------
@@ -39,24 +39,67 @@ namespace ft
                 }
           // ----------------- OPEARATOR -------------------------
                 //pointer and reference  
-                reference operator*() { return node->data; }
-                pointer operator->() { return &node->data; }
+                reference       operator*() { return node->data; }
+                pointer         operator->() { return &node->data; }
 
-                // iterator low - high value
-                // qui creo una funzione che mi itera il nodo a quello successivo ++
-                iterator    operator++(int)
+                Map_iterator    &operator++(void)
                 {
-                    if (node->right)
-                        node = node->right;
+                    iterator next;
+                    if (!node->right)
+                    {
+                        next = node;
+                        while (next->parent && next == next->parent->right)
+                            next = next->parent;
+                        next = next->parent;
+                    }
+                    else
+                    {
+                        next = node->right;
+                        while (next->left)
+                            next = next->left;
+                    }
+                    if (next != NULL)
+                        this->node = next;
                     return (*this);
-                }
+                };
 
+                Map_iterator    operator++(int)
+                {
+                   Map_iterator tmp(*this);
+                   this->operator++();
+                   return (tmp);
+                };
+
+                Map_iterator &operator--(void)
+                {
+                    iterator previous;
+                    if (!node->left)
+                    {
+                        previous = node;
+                        while (previous->parent && previous == previous->parent->left)
+                            previous = previous->parent;
+                        previous = previous->parent;
+                    }
+                    else
+                    {
+                        previous = node->left;
+                        while (previous->right)
+                            previous = previous->right;
+                    }
+                    if (previous != NULL)
+                        this->node = previous;
+                    return (*this);
+                };
+
+                Map_iterator operator--(int)
+                {
+                    Map_iterator tmp(*this);
+                   this->operator--();
+                   return (tmp);
+                }
             bool operator==(const Map_iterator& bst_it) { return (this->_node == bst_it.node); };
             bool operator!=(const Map_iterator& bst_it) { return (this->node != bst_it.node); };     
     };
 };
-
-
-
 
 #endif
