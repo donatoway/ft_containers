@@ -24,7 +24,8 @@ namespace ft
                 typedef      typename   ft::RBTree<value_type>              tree;
                 typedef      typename   ft::Map_iterator<value_type>        iterator;
                 typedef      typename   ft::ConstMap_iterator<value_type>   Map_iterator_const;
-
+                typedef      typename   ft::Map_Reverse_iterator<value_type> Reverse_iterator;
+           
 
         private:
                 pointer                 _first;
@@ -99,9 +100,24 @@ namespace ft
 
                 iterator begin() {return iterator(_first);};
 
+                Map_iterator_const end()const{ return Map_iterator_const(_end);};
+
                 iterator end(){return iterator(_end);};
 
-                Map_iterator_const end()const{ return Map_iterator_const(_end);};
+                Reverse_iterator    rbegin()
+                {
+                  //  _end--;
+                    iterator i = end();
+
+                    i--;
+                    return Map_Reverse_iterator<value_type>(i.node);
+                };
+
+                Reverse_iterator    rend()
+                {
+                   // std::cout << _first->data.first << "\n";
+                    return Map_Reverse_iterator<value_type>(_first);
+                };
 
 
 
@@ -119,10 +135,7 @@ namespace ft
                         _first = _first->left;
                     while (_end->right)
                         _end = _end->right;
-                 //   std::cout << _first->data.first << " " <<_first->data.second << " _first\n";
-
-                 //   std::cout << _end->data.first << " " << _first->data.second << "_end \n\nelemento n " << _size<<"\n";
-
+                
                     
                 }
 

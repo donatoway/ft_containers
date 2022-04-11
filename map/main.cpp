@@ -26,23 +26,27 @@ int main()
   std::cout << it->first << "\n";
 */
 
-  ft::map<int, int> map2;
+
+
+  std::map<int, int> map2;
 
 
   for (size_t i = 0; i < 10; i++)
   {
-    ft::pair<int, int> pair;
-    pair = ft::make_pair(i, i);
+    std::pair<int, int> pair;
+    pair = std::make_pair(i, i);
     map2.insert(pair);
 
   }
-  ft::Map_iterator<ft::pair<int, int> > it;
 
-  for (it = map2.begin(); it != map2.end(); it++)
+  std::map<int, int>::reverse_iterator it;
+
+  for (it = map2.rend(); it !=  map2.rbegin(); --it)
   {
-    std::cout << it->first<< "\n";
+    std::cout << it->first << "\n";
   }
-
+  
+  // std::cout << it->first << "\n";
   //iterator completo
   //continuare con le altre funzioni di map 
  

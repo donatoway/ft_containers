@@ -15,8 +15,7 @@ namespace ft
                 typedef     typename ft::Node<value_type>*                  iterator;
                 typedef     value_type*                                     pointer;
                 typedef     value_type&                                     reference;
-
-        private:
+        public:
                 iterator      node;
         public:
 
@@ -204,6 +203,105 @@ namespace ft
                 bool operator<(const ConstMap_iterator& bst_it){return (this->node < bst_it.node);};		
                 bool operator>=(const ConstMap_iterator& bst_it){return (this->node >= bst_it.node);};
                 bool operator<=(const ConstMap_iterator& bst_it){return (this->node <= bst_it.node);};
+    };
+
+
+    template < class  value>
+    class Map_Reverse_iterator
+    {
+        public:
+                typedef     value                                           value_type;
+                typedef     typename ft::Node<value_type>*                  iterator;
+                typedef     value_type*                                     pointer;
+                typedef     value_type&                                     reference;
+        private:
+                iterator      node;
+        public:
+
+        // --------------- CONSTRUCTOR -------------------------
+                //Costruttore vuoto
+                Map_Reverse_iterator(){};
+
+                //Costruttore di default che ha come parametro un nodo e ne costruisce
+                //Map_iterator con un nodo che punta allo stesso nodo
+                Map_Reverse_iterator(Node<value_type> *obj){node = obj;};
+
+                //Copy Constructor : crea un const map_iterator che punta allo stesso nodo
+                Map_Reverse_iterator(const Map_Reverse_iterator &obj){node = obj.node;}
+
+                //Assegnazione
+                Map_Reverse_iterator& operator=(const Map_Reverse_iterator& obj)
+                {
+                    this->node = obj.node;
+                    return (*this);
+                }
+          // ----------------- OPEARATOR -------------------------
+                //pointer and reference  
+                reference       operator*() { return node->data; }
+                pointer         operator->() { return &node->data; }
+
+                Map_Reverse_iterator    &operator++(void)
+                {
+                    iterator previous;
+                    if (!node->left)
+                    {
+                        previous = node;
+                        while (previous->parent && previous == previous->parent->left)
+                            previous = previous->parent;
+                        previous = previous->parent;
+                    }
+                    else
+                    {
+                        previous = node->left;
+                        while (previous->right)
+                            previous = previous->right;
+                    }
+                    if (previous != NULL)
+                        this->node = previous;
+                    return (*this);
+                }
+
+                Map_Reverse_iterator    operator++(int)
+                {
+                    Map_Reverse_iterator tmp(*this);
+                    this->operator++();
+                    return (tmp);
+                };
+
+                Map_Reverse_iterator &operator--(void)
+                {
+                    iterator next;
+                    if (!node->right)
+                    {
+                        next = node;
+                        while (next->parent && next == next->parent->right)
+                            next = next->parent;
+                        next = next->parent;
+                    }
+                    else
+                    {
+                        next = node->right;
+                        while (next->left)
+                            next = next->left;
+                    }
+                    if (next != NULL)
+                        this->node = next;
+                    return (*this);
+                };
+
+                Map_Reverse_iterator operator--(int)
+                {
+                    Map_Reverse_iterator tmp(*this);
+                    this->operato--();
+                    return (tmp);
+                }
+        
+                bool operator==(const Map_Reverse_iterator& bst_it) { return (this->_node == bst_it.node); };
+                bool operator!=(const Map_Reverse_iterator& bst_it) { return (this->node != bst_it.node); };     
+                bool operator>(const Map_Reverse_iterator& bst_it) { return (this->node > bst_it.node);};
+                bool operator<(const Map_Reverse_iterator& bst_it){return (this->node < bst_it.node);};		
+                bool operator>=(const Map_Reverse_iterator& bst_it){return (this->node >= bst_it.node);};
+                bool operator<=(const Map_Reverse_iterator& bst_it){return (this->node <= bst_it.node);};
     };
 };
 
