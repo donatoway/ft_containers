@@ -17,39 +17,6 @@ int main()
 {
 
 
-/*
-  ft::pair<int, int> a; //value_type
-  a = ft::make_pair(10, 9); // first, second
-  ft::Node<ft::pair<int, int> > *node = new ft::Node<ft::pair<int, int> >(a);
-  ft::pair<int, int> *it;
-  it = &node->data; //it = begin();
-  std::cout << it->first << "\n";
-*/
-
-
-
-  std::map<int, int> map2;
-
-
-  for (size_t i = 0; i < 10; i++)
-  {
-    std::pair<int, int> pair;
-    pair = std::make_pair(i, i);
-    map2.insert(pair);
-
-  }
-
-  std::map<int, int>::reverse_iterator it;
-
-  for (it = map2.rend(); it !=  map2.rbegin(); --it)
-  {
-    std::cout << it->first << "\n";
-  }
-  
-  // std::cout << it->first << "\n";
-  //iterator completo
-  //continuare con le altre funzioni di map 
- 
-
+  //Iterator completato : continuare con le altre funzioni
 
 }

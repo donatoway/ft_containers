@@ -14,18 +14,18 @@ namespace ft
     class map
     {
         public:
-                typedef                 Key                                 key_type;
-                typedef                 Compare                             Key_compare;
-                typedef                 T                                   mapped_type;
-                typedef      typename   ft::pair<Key, T>                    value_type;
-                typedef      typename   std::size_t                         size_type;
-                typedef                 Allocator                           allocator_type;
-                typedef      typename   allocator_type::pointer             pointer;
-                typedef      typename   ft::RBTree<value_type>              tree;
-                typedef      typename   ft::Map_iterator<value_type>        iterator;
-                typedef      typename   ft::ConstMap_iterator<value_type>   Map_iterator_const;
-                typedef      typename   ft::Map_Reverse_iterator<value_type> Reverse_iterator;
-           
+                typedef                 Key                                         key_type;
+                typedef                 Compare                                     Key_compare;
+                typedef                 T                                           mapped_type;
+                typedef      typename   ft::pair<Key, T>                            value_type;
+                typedef      typename   std::size_t                                 size_type;
+                typedef                 Allocator                                   allocator_type;
+                typedef      typename   allocator_type::pointer                     pointer;
+                typedef      typename   ft::RBTree<value_type>                      tree;
+                typedef      typename   ft::Map_iterator<value_type>                iterator;
+                typedef      typename   ft::ConstMap_iterator<value_type>           Map_iterator_const;
+                typedef      typename   ft::Map_Reverse_iterator<value_type>        Reverse_iterator;
+                typedef     typename    ft::Const_Map_Reverse_iterator<value_type>  Const_Rev_Map_Iterator;
 
         private:
                 pointer                 _first;
@@ -96,29 +96,21 @@ namespace ft
                 //correggere costruttori
 
             
-                Map_iterator_const begin(void)const{ return Map_iterator_const(_first);};
+                Map_iterator_const                          begin()const{ return Map_iterator_const(_first);};
 
-                iterator begin() {return iterator(_first);};
+                iterator                                    begin(){ return iterator(_first);};
 
-                Map_iterator_const end()const{ return Map_iterator_const(_end);};
+                Map_iterator_const                           end()const{ return Map_iterator_const(_end);};
 
-                iterator end(){return iterator(_end);};
+                iterator                                    end(){return iterator(_first->right);};
 
-                Reverse_iterator    rbegin()
-                {
-                  //  _end--;
-                    iterator i = end();
+                Reverse_iterator                            rbegin(){ return (Map_Reverse_iterator<value_type>(_end));};
 
-                    i--;
-                    return Map_Reverse_iterator<value_type>(i.node);
-                };
+                Reverse_iterator                            rend(){ return (Map_Reverse_iterator<value_type>(_first->left));};
 
-                Reverse_iterator    rend()
-                {
-                   // std::cout << _first->data.first << "\n";
-                    return Map_Reverse_iterator<value_type>(_first);
-                };
+                Const_Map_Reverse_iterator<value_type>      rbegin()const{return Const_Map_Reverse_iterator<value_type>(_end);};
 
+                Const_Map_Reverse_iterator<value_type>      rend()const{return(Const_Map_Reverse_iterator<value_type>(_first->left)); };
 
 
 
@@ -134,11 +126,8 @@ namespace ft
                     while (_first->left)
                         _first = _first->left;
                     while (_end->right)
-                        _end = _end->right;
-                
-                    
+                        _end = _end->right; 
                 }
-
                 ~map()
                 {
                   
