@@ -143,7 +143,6 @@ namespace ft
                     for (it = begin(); it != end(); it++)
                         if (it->first == k)
                             break;
-                    iterator it2 = find(k);
                     return (it->second);
                 }
 
@@ -151,16 +150,7 @@ namespace ft
 
                 iterator find (const key_type& k)
                 {
-                    iterator it;
-
-                    it = _map;
-                    while (it.node->data.first != k)
-                        it = it.node->left;
-                    if (it.node->data.first == k)
-                        return (it);
-                    while (it.node->data.first != k)
-                        it = it.node->right;
-                    return (it);
+                    //implementare search          
                 }
                 void print2(){print(_map);};
                 

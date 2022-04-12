@@ -25,14 +25,13 @@ int main()
     a.insert(pai);
   }
   
-  a[10] = 88;
   
-  ft::map<int, int>::iterator it;
+  ft::map<int,int>::iterator it;
 
 
-  for (it = a.begin(); it != a.end(); it++)
-  {
-    std::cout << it->second << "\n";
-  }
-//  std::cout << a[10]  << "\n";
+  it = a.find(3);
+   std::cout << it->first << "\n"; 
+
+   //implementare search
+ 
 }
