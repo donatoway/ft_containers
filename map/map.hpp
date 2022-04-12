@@ -28,6 +28,7 @@ namespace ft
                 typedef     typename    ft::Const_Map_Reverse_iterator<value_type>  Const_Rev_Map_Iterator;
 
         private:
+                value_type              other_node;
                 pointer                 _first;
                 pointer                 _end;
                 tree                    _tree;
@@ -63,13 +64,19 @@ namespace ft
                 map(const map& obj): _allocation(obj._allocation)
                 {
                     this->_tree = obj._tree;
-                    this->_map = _tree;
+                    this->_map = obj._map;
+                    this->_first = obj._first;
+                    this->_end = obj._end;
+                    this->_size = obj._size;
                 }
 
                 //assign
                 map &operator=(const map &map)
                 {
                     this->_map = map._map;
+                    this->_first = map._first;
+                    this->_end = map._end;
+                    this->other_node = map.other_node;
                     this->_allocation = map._allocation;
                     this->_tree = map._tree;
                     this->_size = map._size;
@@ -91,11 +98,6 @@ namespace ft
 
             //--------------------- ITERATOR ------------------------------
 
-                //creare una funzione che itera _first fino al nodo piu basso
-                //prima finire di implementare tutta tree_iterator
-                //correggere costruttori
-
-            
                 Map_iterator_const                          begin()const{ return Map_iterator_const(_first);};
 
                 iterator                                    begin(){ return iterator(_first);};
@@ -113,7 +115,53 @@ namespace ft
                 Const_Map_Reverse_iterator<value_type>      rend()const{return(Const_Map_Reverse_iterator<value_type>(_first->left)); };
 
 
+            // -------------------------- CAPACITY ----------------------------
+                size_type size() const {return (this->_size);};
 
+                size_type max_size() const{return (_allocation.max_size());};
+
+                bool empty() const {return !(_size);};
+
+            // ------------------------- ELEMENT ACCESS -----------------------
+
+                //Se k è una chiave di un elemento nel container ritorna quella coppia di valori,
+                //Altrimenti se k non esiste, inserisce una nuova coppia di valori Key = k
+                mapped_type& operator[] (const key_type& k)
+                {
+                    iterator it;
+                    //se esiste ritorna lélemento e il suo second
+                    for (it = begin(); it != end(); it++)
+                    {
+                        if (it->first == k)
+                            return (it->second);
+                    }
+                    //se non esiste lo crea, lo aggiunge ri-itera
+                    //e ritorna quell elemento
+                    other_node = ft::make_pair(k, mapped_type());
+                    insert(other_node);
+
+                    for (it = begin(); it != end(); it++)
+                        if (it->first == k)
+                            break;
+                    iterator it2 = find(k);
+                    return (it->second);
+                }
+
+            //------------------------- OPERATION -------------------------------
+
+                iterator find (const key_type& k)
+                {
+                    iterator it;
+
+                    it = _map;
+                    while (it.node->data.first != k)
+                        it = it.node->left;
+                    if (it.node->data.first == k)
+                        return (it);
+                    while (it.node->data.first != k)
+                        it = it.node->right;
+                    return (it);
+                }
                 void print2(){print(_map);};
                 
                 void insert( const value_type& value )

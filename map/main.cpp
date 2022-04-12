@@ -16,7 +16,23 @@
 int main()
 {
 
+  ft::map<int, int> a;
 
-  //Iterator completato : continuare con le altre funzioni
+  for (size_t i = 0; i < 10; i++)
+  {
+    ft::pair<int, int> pai;
+    pai = ft::make_pair(i,i);
+    a.insert(pai);
+  }
+  
+  a[10] = 88;
+  
+  ft::map<int, int>::iterator it;
 
+
+  for (it = a.begin(); it != a.end(); it++)
+  {
+    std::cout << it->second << "\n";
+  }
+//  std::cout << a[10]  << "\n";
 }
