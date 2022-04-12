@@ -259,7 +259,7 @@ namespace ft
                         Node <value_type> *pt =    new Node<value_type>(pair_val);
                         //Normale inserzione
                         root = RBinsert(root, pt);
-
+                        
                         // Aggiusta la violazione
                         fixViolation(root, pt);    
                 }

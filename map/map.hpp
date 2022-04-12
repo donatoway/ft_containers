@@ -128,21 +128,10 @@ namespace ft
                 //Altrimenti se k non esiste, inserisce una nuova coppia di valori Key = k
                 mapped_type& operator[] (const key_type& k)
                 {
-                    iterator it;
-                    //se esiste ritorna lélemento e il suo second
-                    for (it = begin(); it != end(); it++)
-                    {
-                        if (it->first == k)
-                            return (it->second);
-                    }
-                    //se non esiste lo crea, lo aggiunge ri-itera
-                    //e ritorna quell elemento
-                    other_node = ft::make_pair(k, mapped_type());
-                    insert(other_node);
-
-                    for (it = begin(); it != end(); it++)
-                        if (it->first == k)
-                            break;
+                    iterator it = find(k);
+                    if (it == end()) //se non esiste it = insert
+                        insert(ft::make_pair(k, mapped_type()));
+                    it = find(k);
                     return (it->second);
                 }
 
@@ -150,9 +139,35 @@ namespace ft
 
                 iterator find (const key_type& k)
                 {
-                    //implementare search          
+                    pointer temp = _tree.root;
+                        
+                    while (temp != NULL)
+                    {
+                        if (k < temp->data.first)
+                        {
+                            if (temp->left == NULL)
+                                break;
+                            else
+                                temp = temp->left;
+                        }
+                        else if (k == temp->data.first)
+                            break;
+                        else
+                        {
+                            if (temp->right == NULL)
+                                break;
+                            else
+                                temp = temp->right;
+                        }
+                    }
+                    iterator it = temp;
+                        return it;
                 }
                 void print2(){print(_map);};
+            
+
+        
+        //--------------------------- MODIFIERS ------------------------------
                 
                 void insert( const value_type& value )
                 {
@@ -166,6 +181,14 @@ namespace ft
                     while (_end->right)
                         _end = _end->right; 
                 }
+
+                void clear()
+                {
+        
+                }    
+
+
+            
                 ~map()
                 {
                   
