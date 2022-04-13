@@ -28,7 +28,6 @@ namespace ft
                 typedef     typename    ft::Const_Map_Reverse_iterator<value_type>  Const_Rev_Map_Iterator;
 
         private:
-                value_type              other_node;
                 pointer                 _first;
                 pointer                 _end;
                 tree                    _tree;
@@ -76,7 +75,6 @@ namespace ft
                     this->_map = map._map;
                     this->_first = map._first;
                     this->_end = map._end;
-                    this->other_node = map.other_node;
                     this->_allocation = map._allocation;
                     this->_tree = map._tree;
                     this->_size = map._size;
@@ -171,21 +169,34 @@ namespace ft
                 
                 void insert( const value_type& value )
                 {
-                    _size++;
                     _tree.insert(value);
-                    _map =_tree.root;
-                    _first = _tree.root;
-                    _end = _tree.root;
+                    _map =_tree.get_root();
+                    _first = _tree.get_root();
+                    _end = _tree.get_root();
                     while (_first->left)
                         _first = _first->left;
                     while (_end->right)
-                        _end = _end->right; 
+                        _end = _end->right;
+                    _size = _tree.size();
                 }
 
-                void clear()
+                //swap : scambia il contenuto del container con quello passato come parametro
+                template <typename U>
+                void swap(U& a, U& b)
                 {
-        
-                }    
+                    U tmp = a;
+                    a = b;
+                    b = tmp;
+                }
+
+                void swap (map& x)
+                {
+                    swap(this->_tree, x._tree);
+                    swap(this->_allocation,x._allocation);
+                    swap(this->_size,x._size);
+                    swap(this->_end ,x._end);
+                    swap(this->_first,x._first);
+                } 
 
 
             

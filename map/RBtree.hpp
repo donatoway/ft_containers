@@ -31,24 +31,25 @@ namespace ft
 
         
         // Class to represent Red-Black Tree
-        template <class value, class alloc = std::allocator<Node<value> *> >
+        template <class value, class alloc = std::allocator<Node<value> > >
         class RBTree
         {
                 public:
                 typedef value                                value_type;
-            //  typedef alloc                                allocator_type;
-            //    typedef typename allocator_type::pointer     pointer;
-            //   typedef typename allocator_type::size_type   size_type;
+                typedef alloc                                allocator_type;
+                typedef typename allocator_type::pointer     pointer;
+                typedef typename allocator_type::size_type   size_type;
 
-            public:
-            //   pointer                                 root;
-                Node<value_type>                        *root;
-            //   allocator_type                      _allocation;
-            //   size_type                            _size;
-            // allocator_type allocation;
+            private:
+                Node <value_type>                       *pt;
+                pointer                                 root;
+                allocator_type                          _allocation;
+                size_type                               _size;
             public:
                 // Constructor
-                RBTree(){root =NULL;};
+                RBTree(const allocator_type& _alloc = allocator_type()):_size(0),
+                _allocation(_alloc)
+                {root =NULL;};
                 public:
 
 
@@ -254,15 +255,27 @@ namespace ft
                     inorderHelper(root->right);
                 }
 
+                Node<value_type>*   create_node(const value_type &pair_val)
+                {
+                        Node<value_type> * new_node = _allocation.allocate(1);
+                        _allocation.construct(new_node, pair_val);
+                        return (new_node);
+                }
+
                 void insert(const value_type &pair_val)
                 {
-                        Node <value_type> *pt =    new Node<value_type>(pair_val);
+                        pt =   create_node(pair_val);
+
                         //Normale inserzione
                         root = RBinsert(root, pt);
                         
                         // Aggiusta la violazione
-                        fixViolation(root, pt);    
+                        fixViolation(root, pt);
+                        _size++;
                 }
+
+                pointer     get_root() {return (this->root);};
+                size_type   size(){return (this->_size);};
 
             void print()
             {
