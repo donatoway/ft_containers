@@ -5,12 +5,13 @@
 #include "pair.hpp"
 #include "RBtree.hpp"
 #include "Tree_iterator.hpp"
+#include "utils_map.hpp"
 
 
 
 namespace ft
 {
-    template<class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<Node<ft::pair<Key, T> > > >
+    template<class Key, class T, class Compare = ft::less<Key>, class Allocator = std::allocator<Node<ft::pair<Key, T> > > >
     class map
     {
         public:
@@ -27,6 +28,21 @@ namespace ft
                 typedef      typename   ft::Map_Reverse_iterator<value_type>        Reverse_iterator;
                 typedef     typename    ft::Const_Map_Reverse_iterator<value_type>  Const_Rev_Map_Iterator;
 
+                class value_compare
+			    {
+                    friend class map;
+                    protected:
+                        Compare comp;
+                        value_compare (Compare c) : comp(c) {};
+                    public:
+                        typedef bool result_type;
+                        typedef value_type first_argument_type;
+                        typedef value_type second_argument_type;
+                        bool operator() (const value_type& x, const value_type& y) const
+                        {
+                            return comp(x.first, y.first);
+                        };
+			    };
         private:
                 pointer                 _first;
                 pointer                 _end;
@@ -36,10 +52,11 @@ namespace ft
                 size_type               _size;
         public:
                 // costruttore di default
-                explicit map( const Compare& comp = Key_compare() ,  const Allocator& alloc = Allocator() ) :  _allocation(alloc)
+                explicit map( const Compare& comp = Key_compare() ,  const Allocator& alloc = Allocator() )
                 {
-                    _allocation.allocate(0);
-                    _size = 0;
+                    _tree.root = NULL;
+                    _tree.pt = NULL;
+                    _tree._size = 0;
                     _first = NULL;
                 }
 
@@ -49,8 +66,10 @@ namespace ft
                 map (InputIterator first, InputIterator last, const Key_compare& comp = Key_compare(),\
                         const allocator_type& alloc = allocator_type())
                 {
-                    _size = 0;
-
+                    _tree.root = NULL;
+                    _tree.pt = NULL;
+                    _tree._size = 0;
+                    _first = NULL;
                     for (; first != last; ++first)
                     {
                         _tree.insert(*first);
@@ -60,8 +79,9 @@ namespace ft
                 }
 
                 // Copy constructor
-                map(const map& obj): _allocation(obj._allocation)
+                map(const map& obj)
                 {
+                    this->_tree._allocation = obj._tree._allocation;
                     this->_tree = obj._tree;
                     this->_map = obj._map;
                     this->_first = obj._first;
@@ -75,7 +95,7 @@ namespace ft
                     this->_map = map._map;
                     this->_first = map._first;
                     this->_end = map._end;
-                    this->_allocation = map._allocation;
+                    this->_tree._allocation = map._tree._allocation;
                     this->_tree = map._tree;
                     this->_size = map._size;
                     return (*this);
@@ -137,7 +157,7 @@ namespace ft
 
                 iterator find (const key_type& k)
                 {
-                    pointer temp = _tree.root;
+                    pointer temp = _tree.get_root();
                         
                     while (temp != NULL)
                     {
@@ -161,6 +181,19 @@ namespace ft
                     iterator it = temp;
                         return it;
                 }
+                //count: trova il parametro k, se è presente ritorna 1 altrimenti 0
+                size_type count (const key_type& k) const
+                {
+                    size_t c = 0;
+                    ConstMap_iterator<value_type> it;
+
+                    for (it = begin(); it != end(); it++)
+                        if (it->first == k)
+                            return (1);
+                    return (0);
+                }
+
+
                 void print2(){print(_map);};
             
 
@@ -198,12 +231,20 @@ namespace ft
                     swap(this->_first,x._first);
                 } 
 
+        //-------------------------------- OBSERVES -------------------------------
+                //ritorna una copia della comparazione della chiave
+                Key_compare     key_comp() const {return (Compare());};
 
-            
+                //ritorna un oggetto di comparazione
+                value_compare   value_comp() const {return (value_compare(Key_compare()));};
+                
+                
                 ~map()
                 {
-                  
+                    
                 }
+        //--------------------------- ALLOCATORS --------------------
+        allocator_type get_allocator() const {return (_tree._allocation);};
     };
 }
 

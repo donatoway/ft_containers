@@ -197,7 +197,7 @@ namespace ft
                     return (tmp);
                 }
         
-                bool operator==(const ConstMap_iterator& bst_it) { return (this->_node == bst_it.node); };
+                bool operator==(const ConstMap_iterator& bst_it) { return (this->node == bst_it.node); };
                 bool operator!=(const ConstMap_iterator& bst_it) { return !(*this == bst_it);};     
                 bool operator>(const ConstMap_iterator& bst_it) { return (this->node > bst_it.node);};
                 bool operator<(const ConstMap_iterator& bst_it){return (this->node < bst_it.node);};		

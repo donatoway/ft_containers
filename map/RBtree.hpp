@@ -40,7 +40,7 @@ namespace ft
                 typedef typename allocator_type::pointer     pointer;
                 typedef typename allocator_type::size_type   size_type;
 
-            private:
+            public:
                 Node <value_type>                       *pt;
                 pointer                                 root;
                 allocator_type                          _allocation;
