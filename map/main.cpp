@@ -15,24 +15,22 @@
 int main()
 {
 
-    ft::map<int,int>  map1;
 
+    ft::RBTree<ft::pair< int, int> > tree;
+  ft::pair<int, int>      pai;
     for (int i = 0; i < 10; i++)
-    {
-       ft::pair<int, int>      pai;
-        pai = ft::make_pair(i, i);
+      {
+         ft::pair<int, int>      pai;
+          pai = ft::make_pair(i, i);
 
-        map1.insert(pai);
-    }
+          tree.insert(pai);
+      }
+      ft::pair<int, int>      pai2;
+    pai2 = ft::make_pair(9, 9);
+   // tree.printInOrder();
+     tree.deleteByVal(pai2);
 
-    ft::map<int, int>::iterator it;
-
-    for (it = map1.begin(); it != map1.end(); it++)
-    {
-      std::cout << it->first << "\n";
-    }
-    
-    
+     // tree.printLevelOrder();
 
     // COMPLETARE INSERT GLI ALTRI 2 COSTRUTTORI, DOPO STUDIARE DELETE IN TREE ED INIZIARE
     // AD IMPLEMENTARLO

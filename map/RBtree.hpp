@@ -159,10 +159,10 @@ namespace ft
             
             void swapValues(Node<value_type> *u, Node<value_type> *v)
             {
-                Node<value_type> temp;
-                temp = u->val;
-                u->val = v->val;
-                v->val = temp;
+                Node<value_type> *temp;
+                temp->data = u->data;
+                u->data = v->data;
+                v->data = temp->data;
             }
             
             // fix red red at given node
@@ -221,176 +221,184 @@ namespace ft
                     }
                 }
             }
-            /*
+            
             // find node that do not have a left child
             // in the subtree of the given node
-            Node *successor(Node *x) {
-                Node *temp = x;
+            Node<value_type> *successor(Node<value_type> *x)
+            {
+                Node<value_type> *temp = x;
             
                 while (temp->left != NULL)
-                temp = temp->left;
+                    temp = temp->left;
             
                 return temp;
             }
             
-            // find node that replaces a deleted node in BST
-            Node *BSTreplace(Node *x) {
-                // when node have 2 children
+
+            Node<value_type> *BSTreplace(Node<value_type> *x)
+            {
                 if (x->left != NULL and x->right != NULL)
-                return successor(x->right);
+                    return successor(x->right);
             
-                // when leaf
+
                 if (x->left == NULL and x->right == NULL)
-                return NULL;
-            
-                // when single child
+                    return NULL;
                 if (x->left != NULL)
-                return x->left;
+                    return x->left;
                 else
-                return x->right;
+                    return x->right;
             }
-            
+    
             // deletes the given node
-            void deleteNode(Node *v) {
-                Node *u = BSTreplace(v);
+            void deleteNode(Node<value_type> *v)
+            {
+                Node<value_type> *u = BSTreplace(v);
             
-                // True when u and v are both black
+                // Truequando v e u sono entrambi BLACK
                 bool uvBlack = ((u == NULL or u->color == BLACK) and (v->color == BLACK));
-                Node *parent = v->parent;
+                Node<value_type> *parent = v->parent;
             
-                if (u == NULL) {
-                // u is NULL therefore v is leaf
-                if (v == root) {
-                    // v is root, making root null
-                    root = NULL;
-                } else {
-                    if (uvBlack) {
-                    // u and v both black
-                    // v is leaf, fix double black at v
-                    fixDoubleBlack(v);
-                    } else {
-                    // u or v is red
-                    if (v->sibling() != NULL)
-                        // sibling is not null, make it red"
-                        v->sibling()->color = RED;
-                    }
-            
-                    // delete v from the tree
-                    if (v->isOnLeft()) {
-                    parent->left = NULL;
-                    } else {
-                    parent->right = NULL;
-                    }
-                }
-                delete v;
-                return;
-                }
-            
-                if (v->left == NULL or v->right == NULL) {
-                // v has 1 child
-                if (v == root) {
-                    // v is root, assign the value of u to v, and delete u
-                    v->val = u->val;
-                    v->left = v->right = NULL;
-                    delete u;
-                } else {
-                    // Detach v from tree and move u up
-                    if (v->isOnLeft()) {
-                    parent->left = u;
-                    } else {
-                    parent->right = u;
+                if (u == NULL)
+                {
+                    // se u è NULL v è leaf
+                    if (v == root)
+                        root = NULL; //root è null e v diventa la root
+                    else
+                    {
+                        if (uvBlack)
+                            fixDoubleBlack(v); // u e v sono entrambi neri
+                                            // v è leaf, aggiusta il doubleBlack
+                        else
+                        {
+                            // u or v is red
+                            if (v->sibling() != NULL)
+                                v->sibling()->color = RED;
+                        }
+                        if (v->isOnLeft()) // delete v from the tree cancella v dall' albero
+                            parent->left = NULL;
+                        else  
+                            parent->right = NULL;
                     }
                     delete v;
-                    u->parent = parent;
-                    if (uvBlack) {
-                    // u and v both black, fix double black at u
-                    fixDoubleBlack(u);
-                    } else {
-                    // u or v red, color u black
-                    u->color = BLACK;
-                    }
-                }
-                return;
+                    return;
                 }
             
-                // v has 2 children, swap values with successor and recurse
+                if (v->left == NULL or v->right == NULL)
+                {
+                    // v ha un figlio
+                    if (v == root)
+                    {
+                        // v è la root, assegna il valore di u a v, e cancella u
+                        v->data = u->data;
+                        v->left = v->right = NULL;
+                        delete u;
+                    }
+                    else
+                    {
+                        // stacca v dall'albero e muovi u sopra
+                        if (v->isOnLeft())
+                            parent->left = u;
+                        else 
+                            parent->right = u;
+                        delete v;
+                        u->parent = parent;
+                        if (uvBlack) 
+                            fixDoubleBlack(u); //u e v sono neri, aggiusta il double black a u
+                        else 
+                            u->color = BLACK; // u o v rossi, colora u di nero
+                    }
+                    return;
+                }
+                // v ha 2 figli, scambia i valori con il successivo e fai la ricorsione
                 swapValues(u, v);
                 deleteNode(u);
             }
             
-            void fixDoubleBlack(Node *x) {
+            void fixDoubleBlack(Node<value_type> *x)
+            {
                 if (x == root)
-                // Reached root
-                return;
-            
-                Node *sibling = x->sibling(), *parent = x->parent;
-                if (sibling == NULL) {
-                // No sibiling, double black pushed up
-                fixDoubleBlack(parent);
-                } else {
-                if (sibling->color == RED) {
-                    // Sibling red
-                    parent->color = RED;
-                    sibling->color = BLACK;
-                    if (sibling->isOnLeft()) {
-                    // left case
-                    rightRotate(parent);
-                    } else {
-                    // right case
-                    leftRotate(parent);
+                    return; //x ha raggiunto la root
+
+                Node<value_type> *sibling = x->sibling(), *parent = x->parent;
+                if (sibling == NULL)
+                    fixDoubleBlack(parent);//Senza sorelle il double black viene spinto
+                else
+                {
+                    if (sibling->color == RED)
+                    {
+                        // Sibling red
+                        parent->color = RED;
+                        sibling->color = BLACK;
+                        if (sibling->isOnLeft())
+                            rightRotate(parent); 
+                        else
+                            leftRotate(parent);
+                        fixDoubleBlack(x);
                     }
-                    fixDoubleBlack(x);
-                } else {
-                    // Sibling black
-                    if (sibling->hasRedChild()) {
-                    // at least 1 red children
-                    if (sibling->left != NULL and sibling->left->color == RED) {
-                        if (sibling->isOnLeft()) {
-                        // left left
-                        sibling->left->color = sibling->color;
-                        sibling->color = parent->color;
-                        rightRotate(parent);
-                        } else {
-                        // right left
-                        sibling->left->color = parent->color;
-                        rightRotate(sibling);
-                        leftRotate(parent);
-                        }
-                    } else {
-                        if (sibling->isOnLeft()) {
-                        // left right
-                        sibling->right->color = parent->color;
-                        leftRotate(sibling);
-                        rightRotate(parent);
-                        } else {
-                        // right right
-                        sibling->right->color = sibling->color;
-                        sibling->color = parent->color;
-                        leftRotate(parent);
-                        }
-                    }
-                    parent->color = BLACK;
-                    } else {
-                    // 2 black children
-                    sibling->color = RED;
-                    if (parent->color == BLACK)
-                        fixDoubleBlack(parent);
                     else
-                        parent->color = BLACK;
+                    {
+                        // sorella nera
+                        if (sibling->hasRedChild())
+                        {
+                            //almeno un figlio rosso
+                            if (sibling->left != NULL and sibling->left->color == RED)
+                            {
+                                if (sibling->isOnLeft())
+                                {
+                                    //left-left
+                                    sibling->left->color = sibling->color;
+                                    sibling->color = parent->color;
+                                    rightRotate(parent);
+                                }
+                                else
+                                {
+                                    // right left
+                                    sibling->left->color = parent->color;
+                                    rightRotate(sibling);
+                                    leftRotate(parent);
+                                }
+                        }
+                        else
+                        {
+                            if (sibling->isOnLeft())
+                            {
+                                // left right
+                                sibling->right->color = parent->color;
+                                leftRotate(sibling);
+                                rightRotate(parent);
+                            }
+                            else
+                            {
+                                // right right
+                                sibling->right->color = sibling->color;
+                                sibling->color = parent->color;
+                                leftRotate(parent);
+                            }
+                        }
+                            parent->color = BLACK;
+                        }
+                        else
+                        {
+                            // 2 figli neri
+                            sibling->color = RED;
+                            if (parent->color == BLACK)
+                                fixDoubleBlack(parent);
+                            else
+                                parent->color = BLACK;
+                        }
                     }
-                }
                 }
             }
             
             // prints level order for given node
-            void levelOrder(Node *x) {
+            void levelOrder(Node<value_type> *x) {
                 if (x == NULL)
                 // return if node is null
                 return;
             
                 // queue for level order
-                queue<Node *> q;
-                Node *curr;
+                std::queue<Node<value_type> *> q;
+                Node<value_type> *curr;
             
                 // push x
                 q.push(x);
@@ -402,7 +410,7 @@ namespace ft
                 q.pop();
             
                 // print node value
-                cout << curr->val << " ";
+                std::cout << curr->data.first << " ";
             
                 // push children to queue
                 if (curr->left != NULL)
@@ -413,20 +421,16 @@ namespace ft
             }
             
             // prints inorder recursively
-            void inorder(Node *x) {
+            void inorder(Node<value_type> *x) {
                 if (x == NULL)
                 return;
                 inorder(x->left);
-                cout << x->val << " ";
+                std::cout << "first " << x->data.first << " second " << x->data.second << std::endl;
                 inorder(x->right);
             }
             
-            public:
-            // constructor
-            // initialize root
-            RBTree() { root = NULL; }
             
-            */
+            
             
             // searches for given value
             // if found returns the node (used for delete)
@@ -490,43 +494,41 @@ namespace ft
             }
             
             // utility function that deletes the node with given value
-      /*      void deleteByVal(int n) {
+            void deleteByVal(const value_type &val)
+            {
+                //il tree è vuoto
                 if (root == NULL)
-                // Tree is empty
-                return;
+                    return;
             
-                Node *v = search(n), *u;
+                Node<value_type> *v = search(val), *u;
             
-                if (v->val != n) {
-                cout << "No node found to delete with value:" << n << endl;
-                return;
-                }
-            
+                if (v->data != val)
+                    return;
                 deleteNode(v);
             }
-            
+           
             // prints inorder of the tree
             void printInOrder() {
-                cout << "Inorder: " << endl;
+                std::cout << "Inorder: " << std::endl;
                 if (root == NULL)
-                cout << "Tree is empty" << endl;
+                std::cout << "Tree is empty" <<std::endl;
                 else
                 inorder(root);
-                cout << endl;
+                std::cout << std::endl;
             }
             
             // prints level order of the tree
             void printLevelOrder() {
-                cout << "Level order: " << endl;
+                std::cout << "Level order: " << std::endl;
                 if (root == NULL)
-                cout << "Tree is empty" << endl;
+                std::cout << "Tree is empty" << std::endl;
                 else
                 levelOrder(root);
-                cout << endl;
+                std::cout << std::endl;
             }
-*/
-             pointer     get_root() {return (this->root);};
-                size_type   size(){return (this->_size);};
+
+            pointer     get_root() {return (this->root);};
+            size_type   size(){return (this->_size);};
 
     };
 }
