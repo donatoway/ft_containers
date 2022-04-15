@@ -76,11 +76,12 @@ namespace ft
 
         
         // Class to represent Red-Black Tree
-        template <class value, class alloc = std::allocator<Node<value> > >
+        template <class value, class k, class alloc = std::allocator<Node<value> > >
         class RBTree
         {
                 public:
                 typedef value                                value_type;
+                typedef k                                    key_type;
                 typedef alloc                                allocator_type;
                 typedef typename allocator_type::pointer     pointer;
                 typedef typename allocator_type::size_type   size_type;
@@ -435,16 +436,16 @@ namespace ft
             // searches for given value
             // if found returns the node (used for delete)
             // else returns the last node while traversing (used in insert)
-            Node<value_type>* search(const value_type &pair_val)
+            Node<value_type>* search(const key_type &key)
             {
                 Node<value_type>* temp = root;
                 while (temp != NULL) {
-                if (pair_val < temp->data) {
+                if (key < temp->data.first) {
                     if (temp->left == NULL)
                     break;
                     else
                     temp = temp->left;
-                } else if (pair_val == temp->data) {
+                } else if (key == temp->data.first) {
                     break;
                 } else {
                     if (temp->right == NULL)
@@ -476,7 +477,7 @@ namespace ft
                 else
                 {
                     //cerca il valore pair_val se è gia presente ritorna
-                    Node<value_type> *temp = search(pair_val);
+                    Node<value_type> *temp = search(pair_val.first);
                     if (temp->data == pair_val) 
                         return;
                 //se il valore non è presente, search ritorna il posto
@@ -494,7 +495,7 @@ namespace ft
             }
             
             // utility function that deletes the node with given value
-            void deleteByVal(const value_type &val)
+            void deleteByVal(const key_type &val)
             {
                 //il tree è vuoto
                 if (root == NULL)
@@ -502,9 +503,10 @@ namespace ft
             
                 Node<value_type> *v = search(val), *u;
             
-                if (v->data != val)
+                if (v->data.first != val)
                     return;
                 deleteNode(v);
+                 _size--;
             }
            
             // prints inorder of the tree

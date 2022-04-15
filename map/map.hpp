@@ -22,7 +22,7 @@ namespace ft
                 typedef      typename   std::size_t                                 size_type;
                 typedef                 Allocator                                   allocator_type;
                 typedef      typename   allocator_type::pointer                     pointer;
-                typedef      typename   ft::RBTree<value_type>                      tree;
+                typedef      typename   ft::RBTree<value_type, key_type>            tree;
                 typedef      typename   ft::Map_iterator<value_type>                iterator;
                 typedef      typename   ft::ConstMap_iterator<value_type>           Map_iterator_const;
                 typedef      typename   ft::Map_Reverse_iterator<value_type>        Reverse_iterator;
@@ -43,11 +43,11 @@ namespace ft
                             return comp(x.first, y.first);
                         };
 			    };
-        private:
-                pointer                 _first;
-                pointer                 _end;
+        public:
+              //  pointer                 _first;
+             //   pointer                 _end;
                 tree                    _tree;
-                pointer                 _map;
+             //  pointer                 _map;
                 allocator_type          _allocation;
                 size_type               _size;
         public:
@@ -57,7 +57,7 @@ namespace ft
                     _tree.root = NULL;
                     _tree.pt = NULL;
                     _tree._size = 0;
-                    _first = NULL;
+                   // _first = NULL;
                 }
 
                 // Range constructor
@@ -69,12 +69,12 @@ namespace ft
                     _tree.root = NULL;
                     _tree.pt = NULL;
                     _tree._size = 0;
-                    _first = NULL;
+                  //  _first = NULL;
                     for (; first != last; ++first)
                     {
                         _tree.insert(*first);
                     }
-                    _map = _tree;
+                 //   _map = _tree;
                     
                 }
 
@@ -83,18 +83,18 @@ namespace ft
                 {
                     this->_tree._allocation = obj._tree._allocation;
                     this->_tree = obj._tree;
-                    this->_map = obj._map;
-                    this->_first = obj._first;
-                    this->_end = obj._end;
+                 //   this->_map = obj._map;
+                //    this->_first = obj._first;
+                //    this->_end = obj._end;
                     this->_size = obj._size;
                 }
 
                 //assign
                 map &operator=(const map &map)
                 {
-                    this->_map = map._map;
-                    this->_first = map._first;
-                    this->_end = map._end;
+                //    this->_map = map._map;
+                 //   this->_first = map._first;
+                 //   this->_end = map._end;
                     this->_tree._allocation = map._tree._allocation;
                     this->_tree = map._tree;
                     this->_size = map._size;
@@ -116,21 +116,37 @@ namespace ft
 
             //--------------------- ITERATOR ------------------------------
 
-                Map_iterator_const                          begin()const{ return Map_iterator_const(_first);};
+            //    Map_iterator_const                          begin()const{ return Map_iterator_const(_first);};
 
-                iterator                                    begin(){ return iterator(_first);};
+                iterator                                    begin()
+                { 
+                    Node<value_type>* _first = _tree.get_root();
+                    if (!_first->left && !_first->right)
+                        return (end());
+                    if (!_first->left && _first->right)
+                        _first = _first->right;
+                    while (_first->left)
+                        _first = _first->left;
+                    return iterator(_first);
+                };
+                
+          //      Map_iterator_const                           end()const{ return Map_iterator_const(_end);};
 
-                Map_iterator_const                           end()const{ return Map_iterator_const(_end);};
+                iterator                                    end()
+                {
+                    Node<value_type> *_end = _tree.get_root();
+                    while (_end->right)
+                        _end = _end->right;
+                    return iterator(_end->right);
+                };
 
-                iterator                                    end(){return iterator(_first->right);};
+           //     Reverse_iterator                            rbegin(){ return (Map_Reverse_iterator<value_type>(_end));};
 
-                Reverse_iterator                            rbegin(){ return (Map_Reverse_iterator<value_type>(_end));};
+           //     Reverse_iterator                            rend(){ return (Map_Reverse_iterator<value_type>(_first->left));};
 
-                Reverse_iterator                            rend(){ return (Map_Reverse_iterator<value_type>(_first->left));};
+          //      Const_Map_Reverse_iterator<value_type>      rbegin()const{return Const_Map_Reverse_iterator<value_type>(_end);};
 
-                Const_Map_Reverse_iterator<value_type>      rbegin()const{return Const_Map_Reverse_iterator<value_type>(_end);};
-
-                Const_Map_Reverse_iterator<value_type>      rend()const{return(Const_Map_Reverse_iterator<value_type>(_first->left)); };
+          //      Const_Map_Reverse_iterator<value_type>      rend()const{return(Const_Map_Reverse_iterator<value_type>(_first->left)); };
 
 
             // -------------------------- CAPACITY ----------------------------
@@ -194,7 +210,7 @@ namespace ft
                 }
 
 
-                void print2(){print(_map);};
+             //   void print2(){print(_map);};
             
 
         
@@ -202,14 +218,7 @@ namespace ft
                 
                 void insert( const value_type& value )
                 {
-                    _tree.insert(value);
-                    _map =_tree.get_root();
-                    _first = _tree.get_root();
-                    _end = _tree.get_root();
-                    while (_first->left)
-                        _first = _first->left;
-                    while (_end->right)
-                        _end = _end->right;
+                    _tree.insert(value); 
                     _size = _tree.size();
                 }
 
@@ -225,11 +234,18 @@ namespace ft
                 void swap (map& x)
                 {
                     swap(this->_tree, x._tree);
-                    swap(this->_allocation,x._allocation);
+                    swap(this->_tree._allocation, x._tree._allocation);
+                 //   swap(this->_allocation,x._allocation);
                     swap(this->_size,x._size);
-                    swap(this->_end ,x._end);
-                    swap(this->_first,x._first);
+                 //   swap(this->_end ,x._end);
+                 //   swap(this->_first,x._first);
                 } 
+
+                size_type erase (const key_type& k)
+                {
+                   _tree.deleteByVal(k);
+                    return (_size);
+                }
 
         //-------------------------------- OBSERVES -------------------------------
                 //ritorna una copia della comparazione della chiave
