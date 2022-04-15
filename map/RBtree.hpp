@@ -24,6 +24,51 @@ namespace ft
             left = right = parent = NULL;
             this->color = RED;
             }
+
+            Node *uncle()
+            {
+                // Se non ci sono genitori e nonni non ci sono zii
+                if (parent == NULL or parent->parent == NULL)
+                    return NULL;
+                //se lo zio non e a sinistra e a destra 
+                if (parent->isOnLeft())
+                       return parent->parent->right;
+                else
+                    return parent->parent->left;
+            }
+            //controlla che il nodo è figlio sinistro
+            bool isOnLeft() { return this == parent->left; }
+
+            // ritorna un puntatore alla sorella
+            Node *sibling()
+            {
+                // se non ci sono genitori non ci sono sorelle
+                if (parent == NULL)
+                    return NULL;
+            
+                if (isOnLeft())
+                    return parent->right;
+                return parent->left;
+            }
+            // Muove il nodo giu e muove il nodo nel suo posto
+            void moveDown(Node *nParent)
+            {
+                if (parent != NULL)
+                {
+                    if (isOnLeft()) 
+                        parent->left = nParent;
+                    else
+                        parent->right = nParent;
+                }
+                nParent->parent = parent;
+                parent = nParent;
+            }
+
+            bool hasRedChild()
+            {
+                return (left != NULL && left->color == RED) ||
+                    (right != NULL && right->color == RED);
+            }
         };
 
 
@@ -63,224 +108,426 @@ namespace ft
                     del RBtree. L'elemento in questione e la coppia di valori
                     key-value di pair.
                 */
-            template < class value_type>
-            void levelOrderHelper(Node<value_type>  *root)
+            
+            void leftRotate(Node<value_type> *x)
+            {
+                // il nuovo genitore sarà il figlio destro
+                Node<value_type> *nParent = x->right;
+            
+                // se x è la root, la root sara nparent(figlio Destro)
+                if (x == root)
+                    root = nParent;
+                x->moveDown(nParent);
+                // Connetti x con il nuovo figlio sinistro di nParent
+                x->right = nParent->left;
+
+                //connetti il nuovo genitore del figlio sinistro  con il nodo
+                if (nParent->left != NULL)
+                    nParent->left->parent = x;
+                // connetti il nuovo genitore con x
+                nParent->left = x;
+            }
+            
+            void rightRotate(Node<value_type> *x)
+            {
+                // new parent will be node's left child
+                // il nuovo genitore sarà il figlio sinistro
+                Node<value_type> *nParent = x->left;
+            
+                // update root if current node is root
+                // se x == root allora la root sarà il nuovo nParent(figlioSinistro)
+                if (x == root)
+                    root = nParent;
+                x->moveDown(nParent);
+                // connetti x con il nuovo genitore di destra
+                x->left = nParent->right;
+                // connetti il nuovo genitore di destra con il nodo 
+                // se non è null
+                if (nParent->right != NULL)
+                    nParent->right->parent = x;
+                // connetti il nuovo genitore con x
+                nParent->right = x;
+            }
+            
+            void swapColors(Node<value_type> *x1, Node<value_type> *x2)
+            {
+                bool temp;
+                temp = x1->color;
+                x1->color = x2->color;
+                x2->color = temp;
+            }
+            
+            void swapValues(Node<value_type> *u, Node<value_type> *v)
+            {
+                Node<value_type> temp;
+                temp = u->val;
+                u->val = v->val;
+                v->val = temp;
+            }
+            
+            // fix red red at given node
+            void fixRedRed(Node<value_type> *x)
+            {
+                // se la root è x allora x = BLACK
+                if (x == root)
                 {
-                    if (root == NULL)
-                        return;
-                
-                    std::queue<Node<value_type> *> q;
-                    q.push(root);
-                
-                    while (!q.empty())
+                    x->color = BLACK;
+                    return;
+                }
+            
+                // inizializza genitore, nonno e zio
+                Node<value_type> *parent = x->parent, *grandparent = parent->parent,
+                    *uncle = x->uncle();
+            
+                if (parent->color != BLACK)
+                {
+                    if (uncle != NULL && uncle->color == RED)
                     {
-                        Node<value_type>  *temp = q.front();
-                        std::cout << temp->data.first << "  ";
-                        q.pop();
-                
-                        if (temp->left != NULL)
-                            q.push(temp->left);
-                
-                        if (temp->right != NULL)
-                            q.push(temp->right);
+                        // se lo zio è RED, usa il colorflip ricorsivo
+                        parent->color = BLACK;
+                        uncle->color = BLACK;
+                        grandparent->color = RED;
+                        fixRedRed(grandparent);
                     }
-                }
-
-                Node<value_type> *RBinsert(Node<value_type> *root, Node<value_type> *pt)
-                {
-                    //Se è il primo elemento inserito ritorna pt
-                        if (root == NULL)
-                            return (pt);
-                        //altrimenti se il nuovo nodo è minore mettilo a sinistra
-                        if (pt->data < root->data)
-                        {
-                            root->left = RBinsert(root->left, pt);
-                            root->left->parent = root;
-                        }
-                        // se il nuovo nodo è maggiore posizionalo a destra
-                        else if (pt->data > root->data)
-                        {
-                            root->right = RBinsert(root->right, pt);
-                        //  std::cout << root->right->data.first;
-                            root->right->parent = root;
-                        //  std::cout << root->right->parent->data.first;
-                        }
-                    // std::cout << root->right->data.first;
-                    return (root);
-                }
-
-                void rotateRight(Node<value_type> *&root, Node<value_type> *&pt)
-                {
-                    Node<value_type> *pt_left = pt->left;   // variabile tmp
-
-                    pt->left = pt_left->right; // il figlio sinistro diventa destro
-
-                    if (pt->left != NULL) // se è un figlio sinistro
-                        pt->left->parent = pt; // il genitore diventa pt (nuovo nodo)
-                    pt_left->parent = pt->parent; // la tmp->padre == il nuovo pt padre
-                    if (pt->parent == NULL) // se c'è un padre 
-                        root = pt_left; // la root diventa la tmp creata
-                    else if (pt == pt->parent->left) // altrimenti se pt è figlio sinistro
-                        pt->parent->left = pt_left; // il figlio sinistro diventa la tmp creata
                     else
-                        pt->parent->right = pt_left; // altrimenti il figlio destro diventa la tmp creata
-                    pt_left->right = pt; // la tmp diventa pt
-                    pt->parent = pt_left; // il genitore di pt diventa la tmp
-                }
-
-                void rotateLeft(Node<value_type> *&root, Node<value_type> *&pt)
-                {
-                    Node<value_type> *pt_right = pt->right; // tmp
-                    pt->right = pt_right->left; // il figlio destro diventa il figlio sinistro
-
-                    if (pt->right != NULL) // se è presente un figlio destro
-                        pt->right->parent = pt; // il padre del figlio destro diventa pt
-                    
-                    pt_right->parent = pt->parent; // tmp diventa il padre di pt
-                    if (pt->parent == NULL) // se non è presente nessun padre di pt
-                        root = pt_right; //root diventa la tmp
-                    else if (pt == pt->parent->left) // altrimenti se il fratello di pt non è qualcos'altro
-                        pt->parent->left = pt_right; // il figlio sinistro diventa destro
-                    else
-                        pt->parent->right = pt_right; // altrimenti se è qualcos'altro il figlio destro diventa la tmp
-                    pt_right->left = pt; //la tmp == pt
-                    pt->parent = pt_right; // il padre di pt diviene la nuova tmp
-
-                }
-
-                void fixViolation(Node<value_type> *&root, Node<value_type> *&pt)
-                {
-                    Node<value_type> *parent_pt = NULL;
-                    Node<value_type> *grand_parent_pt = NULL;
-
-                    // fino a quando il nuovo nodo non è root e il colore del nuovo nodo è rosso e
-                    // il  colore del padre anche eseguo il 
-                    while ((pt != root) && (pt->color != BLACK) && (pt->parent->color == RED))
                     {
-                        parent_pt = pt->parent; // padre
-                        grand_parent_pt = pt->parent->parent; // nonno
-
-                        /*
-                            Case : A
-                            se il padre di pt è il figlio sinistro del nonno di pt
-                        */
-                        if (parent_pt == grand_parent_pt->left)
+                        //Altimenti utilizza i Rotate
+                        if (parent->isOnLeft())
                         {
-                            //Il nodo zio è il figlio destro del nonno
-                            Node<value_type> *uncle_pt = grand_parent_pt->right;
-
-                            /*
-                                Case : 1
-                                se lo zio di pt è anche esso rosso, si applica il colorflip
-                            */
-                            if (uncle_pt != NULL && uncle_pt->color == RED)
-                            {
-                                grand_parent_pt->color = RED;
-                                parent_pt->color = BLACK;
-                                uncle_pt->color = BLACK;
-                                pt = grand_parent_pt;
-                            }
+                            if (x->isOnLeft()) // per il left-right
+                                swapColors(parent, grandparent);
                             else
                             {
-                                /*
-                                Case : 2
-                                se pt è il figlio destro di di suo padre
-                                si applica la Left-rotation
-                                */
-                                if (pt == parent_pt->right)
-                                {
-                                    rotateLeft(root, parent_pt);
-                                    pt = parent_pt;
-                                    parent_pt = pt->parent;
-                                }
-                                /*
-                                    Case : 3
-                                    se pt è il figlio sinistro di suo padre 
-                                    si applica la right-rotation
-                                */
-                                rotateRight (root, grand_parent_pt);
-                                std::swap(parent_pt->color, grand_parent_pt->color);
-                                pt = parent_pt;
-
+                                leftRotate(parent);
+                                swapColors(x, grandparent);
                             }
-                            
+                            // Per il left-left e il left-right
+                            rightRotate(grandparent);
                         }
                         else
                         {
-                            Node<value_type> *uncle_pt = grand_parent_pt->left;
-                            /*
-                                Case : 1
-                                se Lo zio di pt è rosso è richiesto solo il colorflip 
-                            */
-                            if ((uncle_pt != NULL) && (uncle_pt->color == RED))
+                            if (x->isOnLeft())
                             {
-                                grand_parent_pt->color = RED;
-                                parent_pt->color = BLACK;
-                                uncle_pt->color = BLACK;
-                                pt = grand_parent_pt;
+                                // for right left
+                                // per il right-left
+                                rightRotate(parent);
+                                swapColors(x, grandparent);
                             }
                             else
-                            {
-                                /*
-                                    Case : 2
-                                    se pt è il figlio sinistro di suo padre è richiesta
-                                    una right-Rotation
-                                */
-                            if (pt == parent_pt->left)
-                            {
-                                rotateRight(root, parent_pt);
-                                pt = parent_pt;
-                                parent_pt = pt->parent;
-                            }
-                            /*
-                                    Case : 3
-                                    se pt è il figlio destro di suo padre si applica una Left-Rotation
-                            */
-                                rotateLeft(root, grand_parent_pt);
-                                std::swap(parent_pt->color, grand_parent_pt->color);
-                                pt = parent_pt;
-                            }
+                                swapColors(parent, grandparent);
+                            // per il right-right e right-left
+                            leftRotate(grandparent);
                         }
                     }
-                    root->color  = BLACK;
                 }
-
-                void inorderHelper(Node<value_type> *root)
+            }
+            /*
+            // find node that do not have a left child
+            // in the subtree of the given node
+            Node *successor(Node *x) {
+                Node *temp = x;
+            
+                while (temp->left != NULL)
+                temp = temp->left;
+            
+                return temp;
+            }
+            
+            // find node that replaces a deleted node in BST
+            Node *BSTreplace(Node *x) {
+                // when node have 2 children
+                if (x->left != NULL and x->right != NULL)
+                return successor(x->right);
+            
+                // when leaf
+                if (x->left == NULL and x->right == NULL)
+                return NULL;
+            
+                // when single child
+                if (x->left != NULL)
+                return x->left;
+                else
+                return x->right;
+            }
+            
+            // deletes the given node
+            void deleteNode(Node *v) {
+                Node *u = BSTreplace(v);
+            
+                // True when u and v are both black
+                bool uvBlack = ((u == NULL or u->color == BLACK) and (v->color == BLACK));
+                Node *parent = v->parent;
+            
+                if (u == NULL) {
+                // u is NULL therefore v is leaf
+                if (v == root) {
+                    // v is root, making root null
+                    root = NULL;
+                } else {
+                    if (uvBlack) {
+                    // u and v both black
+                    // v is leaf, fix double black at v
+                    fixDoubleBlack(v);
+                    } else {
+                    // u or v is red
+                    if (v->sibling() != NULL)
+                        // sibling is not null, make it red"
+                        v->sibling()->color = RED;
+                    }
+            
+                    // delete v from the tree
+                    if (v->isOnLeft()) {
+                    parent->left = NULL;
+                    } else {
+                    parent->right = NULL;
+                    }
+                }
+                delete v;
+                return;
+                }
+            
+                if (v->left == NULL or v->right == NULL) {
+                // v has 1 child
+                if (v == root) {
+                    // v is root, assign the value of u to v, and delete u
+                    v->val = u->val;
+                    v->left = v->right = NULL;
+                    delete u;
+                } else {
+                    // Detach v from tree and move u up
+                    if (v->isOnLeft()) {
+                    parent->left = u;
+                    } else {
+                    parent->right = u;
+                    }
+                    delete v;
+                    u->parent = parent;
+                    if (uvBlack) {
+                    // u and v both black, fix double black at u
+                    fixDoubleBlack(u);
+                    } else {
+                    // u or v red, color u black
+                    u->color = BLACK;
+                    }
+                }
+                return;
+                }
+            
+                // v has 2 children, swap values with successor and recurse
+                swapValues(u, v);
+                deleteNode(u);
+            }
+            
+            void fixDoubleBlack(Node *x) {
+                if (x == root)
+                // Reached root
+                return;
+            
+                Node *sibling = x->sibling(), *parent = x->parent;
+                if (sibling == NULL) {
+                // No sibiling, double black pushed up
+                fixDoubleBlack(parent);
+                } else {
+                if (sibling->color == RED) {
+                    // Sibling red
+                    parent->color = RED;
+                    sibling->color = BLACK;
+                    if (sibling->isOnLeft()) {
+                    // left case
+                    rightRotate(parent);
+                    } else {
+                    // right case
+                    leftRotate(parent);
+                    }
+                    fixDoubleBlack(x);
+                } else {
+                    // Sibling black
+                    if (sibling->hasRedChild()) {
+                    // at least 1 red children
+                    if (sibling->left != NULL and sibling->left->color == RED) {
+                        if (sibling->isOnLeft()) {
+                        // left left
+                        sibling->left->color = sibling->color;
+                        sibling->color = parent->color;
+                        rightRotate(parent);
+                        } else {
+                        // right left
+                        sibling->left->color = parent->color;
+                        rightRotate(sibling);
+                        leftRotate(parent);
+                        }
+                    } else {
+                        if (sibling->isOnLeft()) {
+                        // left right
+                        sibling->right->color = parent->color;
+                        leftRotate(sibling);
+                        rightRotate(parent);
+                        } else {
+                        // right right
+                        sibling->right->color = sibling->color;
+                        sibling->color = parent->color;
+                        leftRotate(parent);
+                        }
+                    }
+                    parent->color = BLACK;
+                    } else {
+                    // 2 black children
+                    sibling->color = RED;
+                    if (parent->color == BLACK)
+                        fixDoubleBlack(parent);
+                    else
+                        parent->color = BLACK;
+                    }
+                }
+                }
+            }
+            
+            // prints level order for given node
+            void levelOrder(Node *x) {
+                if (x == NULL)
+                // return if node is null
+                return;
+            
+                // queue for level order
+                queue<Node *> q;
+                Node *curr;
+            
+                // push x
+                q.push(x);
+            
+                while (!q.empty()) {
+                // while q is not empty
+                // dequeue
+                curr = q.front();
+                q.pop();
+            
+                // print node value
+                cout << curr->val << " ";
+            
+                // push children to queue
+                if (curr->left != NULL)
+                    q.push(curr->left);
+                if (curr->right != NULL)
+                    q.push(curr->right);
+                }
+            }
+            
+            // prints inorder recursively
+            void inorder(Node *x) {
+                if (x == NULL)
+                return;
+                inorder(x->left);
+                cout << x->val << " ";
+                inorder(x->right);
+            }
+            
+            public:
+            // constructor
+            // initialize root
+            RBTree() { root = NULL; }
+            
+            */
+            
+            // searches for given value
+            // if found returns the node (used for delete)
+            // else returns the last node while traversing (used in insert)
+            Node<value_type>* search(const value_type &pair_val)
+            {
+                Node<value_type>* temp = root;
+                while (temp != NULL) {
+                if (pair_val < temp->data) {
+                    if (temp->left == NULL)
+                    break;
+                    else
+                    temp = temp->left;
+                } else if (pair_val == temp->data) {
+                    break;
+                } else {
+                    if (temp->right == NULL)
+                    break;
+                    else
+                    temp = temp->right;
+                }
+                }
+            
+                return temp;
+            }
+            
+            Node<value_type>*   create_node(const value_type &pair_val)
+            {
+                Node<value_type> * new_node = _allocation.allocate(1);
+                _allocation.construct(new_node, pair_val);
+                return (new_node);
+            }
+            
+            // inserts the given value to tree
+            void insert(const value_type &pair_val)
+            {
+                pt = create_node(pair_val);
+                if (root == NULL)
                 {
-                    if (root == NULL)
+                    pt->color = BLACK; //se la root è null semplicemente
+                    root = pt;          // aggiungi il nuovo nodo come root
+                }
+                else
+                {
+                    //cerca il valore pair_val se è gia presente ritorna
+                    Node<value_type> *temp = search(pair_val);
+                    if (temp->data == pair_val) 
                         return;
-                
-                    inorderHelper(root->left);
-                    std::cout << root->data.first <<  " " << root->data.second << "  ";
-                    inorderHelper(root->right);
+                //se il valore non è presente, search ritorna il posto
+                // in cui deve essere inserito
+                pt->parent = temp;
+            
+                if (pair_val < temp->data)
+                    temp->left = pt;
+                else
+                    temp->right = pt;
+            
+                // fix red red voilaton if exists
+                fixRedRed(pt);
                 }
-
-                Node<value_type>*   create_node(const value_type &pair_val)
-                {
-                        Node<value_type> * new_node = _allocation.allocate(1);
-                        _allocation.construct(new_node, pair_val);
-                        return (new_node);
+            }
+            
+            // utility function that deletes the node with given value
+      /*      void deleteByVal(int n) {
+                if (root == NULL)
+                // Tree is empty
+                return;
+            
+                Node *v = search(n), *u;
+            
+                if (v->val != n) {
+                cout << "No node found to delete with value:" << n << endl;
+                return;
                 }
-
-                void insert(const value_type &pair_val)
-                {
-                        pt =   create_node(pair_val);
-
-                        //Normale inserzione
-                        root = RBinsert(root, pt);
-                        
-                        // Aggiusta la violazione
-                        fixViolation(root, pt);
-                        _size++;
-                }
-
-                pointer     get_root() {return (this->root);};
+            
+                deleteNode(v);
+            }
+            
+            // prints inorder of the tree
+            void printInOrder() {
+                cout << "Inorder: " << endl;
+                if (root == NULL)
+                cout << "Tree is empty" << endl;
+                else
+                inorder(root);
+                cout << endl;
+            }
+            
+            // prints level order of the tree
+            void printLevelOrder() {
+                cout << "Level order: " << endl;
+                if (root == NULL)
+                cout << "Tree is empty" << endl;
+                else
+                levelOrder(root);
+                cout << endl;
+            }
+*/
+             pointer     get_root() {return (this->root);};
                 size_type   size(){return (this->_size);};
 
-            void print()
-            {
-                inorderHelper(root);
-            }
-        };
+    };
 }
 #endif

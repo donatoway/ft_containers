@@ -14,25 +14,25 @@
 
 int main()
 {
-    ft::pair<int, int> i;
-    i = ft::make_pair(10,9);
-    ft::map<int,int> mymap;
 
-    ft::map<int, int>::iterator it;
+    ft::map<int,int>  map1;
 
     for (int i = 0; i < 10; i++)
     {
-         ft::pair<int, int> pp;
-        pp = ft::make_pair(i,i);
-        mymap.insert(pp);
-    }
-     ft::map<int,int>  mymap2 =mymap;
+       ft::pair<int, int>      pai;
+        pai = ft::make_pair(i, i);
 
-    for (it = mymap2.begin(); it != mymap2.end(); it++)
+        map1.insert(pai);
+    }
+
+    ft::map<int, int>::iterator it;
+
+    for (it = map1.begin(); it != map1.end(); it++)
     {
-        std::cout << it->first << "\n";
+      std::cout << it->first << "\n";
     }
-
+    
+    
 
     // COMPLETARE INSERT GLI ALTRI 2 COSTRUTTORI, DOPO STUDIARE DELETE IN TREE ED INIZIARE
     // AD IMPLEMENTARLO
