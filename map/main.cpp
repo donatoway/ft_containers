@@ -45,5 +45,8 @@ for (it =map1.begin(); it != map1.end(); it++)
 
   map1._tree.printInOrder();
       
+
+      //ci deve essere qualcosa che non va nell'iterator
+      //vedere cosa e che non va o rifarlo se si fa prima
   return 0;
 }
