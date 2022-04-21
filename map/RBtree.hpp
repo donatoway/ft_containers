@@ -109,7 +109,14 @@ namespace ft
                     del RBtree. L'elemento in questione e la coppia di valori
                     key-value di pair.
                 */
-            
+             pointer get_end()
+             {
+                while (this->root->right)
+                    root= root->right;
+               // if (root->left)
+                //    root = root->left;
+                return (root->right);
+            }
             void leftRotate(Node<value_type> *x)
             {
                 // il nuovo genitore sarà il figlio destro

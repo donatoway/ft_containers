@@ -57,7 +57,7 @@ namespace ft
                         while (next->left)
                             next = next->left;
                     }
-                 //   if (next != NULL)
+                   // if (next != NULL)
                         this->node = next;
                     return (*this);
                 };
@@ -85,7 +85,7 @@ namespace ft
                         while (previous->right)
                             previous = previous->right;
                     }
-                 //   if (previous != NULL)
+                  //  if (previous != NULL)
                         this->node = previous;
                     return (*this);
                 };

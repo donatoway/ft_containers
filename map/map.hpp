@@ -44,7 +44,8 @@ namespace ft
                         };
 			    };
         public:
-              //  pointer                 _first;
+                pointer                 _first;
+              iterator                      it;
              //   pointer                 _end;
                 tree                    _tree;
              //  pointer                 _map;
@@ -118,46 +119,47 @@ namespace ft
 
                 Map_iterator_const                          begin()const
                 {
-                    Node<value_type>* _first = _tree.root;
+                    _first = _tree.root;
                     if (!_first->left && !_first->right)
                         return (end());
                     if (!_first->left && _first->right)
                         _first = _first->right;
                     while (_first->left)
                         _first = _first->left;
-                    return Map_iterator_const(_first);
+                    return Map_iterator_const(_first->left);
                 };
 
-                iterator                                    begin()
-                { 
-                    Node<value_type>* _first = _tree.root;
-                    if (!_first->left && !_first->right)
+                iterator begin()
+                {
+                    Node<value_type> *_first2 = _tree.root;
+
+                    if (!_first2->left && !_first2->right)
                         return (end());
-                    if (!_first->left && _first->right)
-                        _first = _first->right;
-                    while (_first->left)
-                        _first = _first->left;
-                    return iterator(_first);
+                    if (!_first2->left && _first2->right)
+                        _first2= _first2->right;
+                    while (_first2->left)
+                        _first2 = _first2->left;
+                    return (iterator(_first2));
                 };
-                pointer   _end(void) const
+                Node<value_type>   *_end(void) const
                 {
                     return (_tree.root->right);
                 };
 
                 Map_iterator_const                           end()const
                 {
-                    Node<value_type> *_end = _tree.root;
-                    while (_end->right)
-                        _end = _end->right;
-                    return Map_iterator_const(_end->right);
+                  
+                    return Map_iterator_const(_end());
                 };
 
                 iterator                                    end()
                 {
-                    Node<value_type> *_end1 = _tree.root;
-                    while (_end1->right)
-                        _end1 = _end1->right;
-                    return iterator(_end());
+                   Node<value_type> *pt;
+
+                    pt = _tree.root;
+                    while (pt->right)
+                        pt = pt->right;
+                    return iterator(pt->right);
                 };
 
                 Reverse_iterator                            rbegin()
@@ -307,12 +309,13 @@ namespace ft
 
                  void erase (iterator first, iterator last)
                  {
-                     while (first != last)
-                     {
-                          Node<value_type> *tmp = first.node;
-                          _tree.deleteByVal(tmp->data.first);
-                          first++;
-                     } 
+                    iterator todel;
+                    while (first != last)
+                    {
+                        todel = first;
+                        ++first;
+                        _tree.deleteByVal(todel->first);
+                    }
                  }
 
         //-------------------------------- OBSERVES -------------------------------
