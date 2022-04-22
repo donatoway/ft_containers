@@ -131,19 +131,20 @@ namespace ft
 
                 iterator begin()
                 {
-                    Node<value_type> *_first2 = _tree.root;
+                    _first = _tree.root;
 
-                    if (!_first2->left && !_first2->right)
-                        return (end());
-                    if (!_first2->left && _first2->right)
-                        _first2= _first2->right;
-                    while (_first2->left)
-                        _first2 = _first2->left;
-                    return (iterator(_first2));
+                    if (!_first->left && !_first->right)
+                       return (end());
+                    if (!_first->left && _first->right)
+                        _first= _first->right;
+                    while (_first->left)
+                        _first = _first->left;
+                    return (iterator(*_first));  
                 };
                 Node<value_type>   *_end(void) const
                 {
-                    return (_tree.root->right);
+                    
+                    return (*_first->right);
                 };
 
                 Map_iterator_const                           end()const
@@ -154,12 +155,10 @@ namespace ft
 
                 iterator                                    end()
                 {
-                   Node<value_type> *pt;
-
-                    pt = _tree.root;
-                    while (pt->right)
-                        pt = pt->right;
-                    return iterator(pt->right);
+                    while (_first->right != nullptr)
+                        _first = _first->right;
+                    
+                    return iterator(*_first);
                 };
 
                 Reverse_iterator                            rbegin()

@@ -25,28 +25,17 @@ int main()
 
 
     ft::map<int , int>::iterator it;
-    ft::map<int, int>::iterator it2;
-
-  it = map1.begin();
- 
+   // ft::map<int, int>::iterator it2;
 
 
-
-for (it =map1.begin(); it != map1.end(); it++)
-{
-  map1.erase(it);
-}
-
-
-for (it =map1.begin(); it != map1.end(); it++)
-{
- std::cout << it->first << "\n";
-}
+  
+    it = map1.begin();
+    map1.erase(it, map1.end());
 
   map1._tree.printInOrder();
       
 
-      //ci deve essere qualcosa che non va nell'iterator
-      //vedere cosa e che non va o rifarlo se si fa prima
+      //concentrarsi sull último elemento, passare a iterator l'ultimo elemento, l elemento e il compare
+      //guarde llefranc che piu chiaro
   return 0;
 }
