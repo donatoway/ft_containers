@@ -4,20 +4,20 @@
 #include "../vector/iterators.hpp"
 #include "RBtree.hpp"
 #include "map.hpp"
-#include "utils_map.hpp"
+
 namespace ft
 {
-    template < class  value, class Compare = less<value> >
+    template < class  value>
     class Map_iterator
     {
         public:
                 typedef     value                                           value_type;
-                typedef     value*                                          iterator;
-                typedef     value*                                     pointer;
-                typedef     value&                                     reference;
+                typedef     typename ft::Node<value_type>*                  iterator;
+                typedef     value_type*                                     pointer;
+                typedef     value_type&                                     reference;
         public:
-                struct  Node<value_type>* node;
-                Compare _comp;
+                iterator      node;
+                iterator        _last;
         public:
 
         // --------------- CONSTRUCTOR -------------------------
@@ -26,13 +26,10 @@ namespace ft
 
                 //Costruttore di default che ha come parametro un nodo e ne costruisce
                 //Map_iterator con un nodo che punta allo stesso nodo
-                Map_iterator(struct Node<value>& obj): node(&obj)
-                {
-                  //  std::cout << _last->data.first << "<<\n";
-                };
+                Map_iterator(Node<value_type> *obj){node = obj;};
 
                 //Copy Constructor : crea un const map_iterator che punta allo stesso nodo
-                Map_iterator(const Map_iterator &obj){node = obj.node;};
+                Map_iterator(const Map_iterator &obj){node = obj.node;}
 
                 //Assegnazione
                 Map_iterator& operator=(const Map_iterator& obj)
@@ -47,27 +44,23 @@ namespace ft
 
                 Map_iterator    &operator++(void)
                 {
-                  //  std::cout << _last->data.first << "<<\n";
-                    if(node->right)
+                    iterator next;
+                    if (!node->right)
                     {
-                        node = node->right;
-                        while(node->left)
-                            node = node->left;
+                        next = node;
+                        while (next->parent && next == next->parent->right)
+                            next = next->parent;
+                        next = next->parent;
                     }
-                        //return (*this);
-                    else 
+                    else
                     {
-                        while(node->parent)
-                        {
-                            if ((!_comp(node->parent->data, node->data) && node->parent->data != node->data)) {
-                                node = node->parent;
-                                return (*this);
-                            }
-                            node = node->parent;
-                        }
+                       // std::cout << "ciooo\n";
+                        next = node->right;
+                        while (next->left)
+                            next = next->left;
                     }
-                    
-		            return *this;
+                    this->node = next;
+                    return (*this);
                 };
 
                 Map_iterator    operator++(int)
@@ -93,7 +86,7 @@ namespace ft
                         while (previous->right)
                             previous = previous->right;
                     }
-                  //  if (previous != NULL)
+                 //   if (previous != NULL)
                         this->node = previous;
                     return (*this);
                 };
