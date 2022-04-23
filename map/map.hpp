@@ -44,7 +44,7 @@ namespace ft
                         };
 			    };
         public:
-              //  pointer                 _first;
+                pointer                 _first;
                 pointer                 _last;
                 tree                    _tree;
              //  pointer                 _map;
@@ -120,25 +120,25 @@ namespace ft
 
                 iterator                                    begin()
                 { 
-                    Node<value_type>* _first = _tree.get_root();
-                    if (!_first->left && !_first->right)
+                    Node<value_type>  *n = _tree.get_root();
+                    if (!n->left && !n->right)
                         return (end());
-                    if (!_first->left && _first->right)
-                        _first = _first->right;
-                    while (_first->left)
-                        _first = _first->left;
-                    _last = _first;
-                    return iterator(_first);
+                    if (!n->left && n->right)
+                        n = n->right;
+                    while (n->left)
+                        n = n->left;
+                    return iterator(n);
                 };
                 
           //      Map_iterator_const                           end()const{ return Map_iterator_const(_end);};
-
+                
+                Node<value_type> *_end(void) const
+                {
+                    return (_tree.root->right);
+                };
                 iterator                                    end()
                 {
-                    Node<value_type> *_end = _tree.get_root();
-                    while (_end->right)
-                        _end = _end->right;
-                    return iterator(_end->right);
+                    return iterator(_end());
                 };
 
            //     Reverse_iterator                            rbegin(){ return (Map_Reverse_iterator<value_type>(_end));};
@@ -252,15 +252,16 @@ namespace ft
                  {   
                     erase(position.node->data.first);
                  }
-
+                
+               
                  void erase (iterator first, iterator last)
-                 {
-                     iterator it = first;
+                 {        
+                    iterator it = first;
                     while (first != last)
                     {
-                         erase(it);
-                         it++;
-                         first++;
+                        it = first;
+                        erase(first->first);
+                        first++;
                     }
                  }
 

@@ -95,7 +95,7 @@ namespace ft
                 // Constructor
                 RBTree(const allocator_type& _alloc = allocator_type()):_size(0),
                 _allocation(_alloc)
-                {root =NULL;};
+                {root = NULL;};
                 public:
 
 
@@ -113,8 +113,6 @@ namespace ft
              {
                 while (this->root->right)
                     root= root->right;
-               // if (root->left)
-                //    root = root->left;
                 return (root->right);
             }
             void leftRotate(Node<value_type> *x)
@@ -479,7 +477,7 @@ namespace ft
                 if (root == NULL)
                 {
                     pt->color = BLACK; //se la root è null semplicemente
-                    root = pt;          // aggiungi il nuovo nodo come root
+                    root = pt;
                 }
                 else
                 {

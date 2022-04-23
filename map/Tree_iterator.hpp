@@ -41,10 +41,9 @@ namespace ft
                 //pointer and reference  
                 reference       operator*() { return node->data; }
                 pointer         operator->() { return &node->data; }
-
-                Map_iterator    &operator++(void)
+                Node<value_type>* _successor(Node<value_type>* ptr)
                 {
-                    iterator next;
+                    Node<value_type>* next;
                     if (!node->right)
                     {
                         next = node;
@@ -54,12 +53,15 @@ namespace ft
                     }
                     else
                     {
-                       // std::cout << "ciooo\n";
                         next = node->right;
                         while (next->left)
                             next = next->left;
                     }
-                    this->node = next;
+                    return (next);
+                };
+                Map_iterator    &operator++(void)
+                {
+                   node = _successor(node);
                     return (*this);
                 };
 
