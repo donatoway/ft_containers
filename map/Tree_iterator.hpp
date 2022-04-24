@@ -2,194 +2,197 @@
 #define TREE_ITERATOR_HPP
 
 #include "../vector/iterators.hpp"
-#include "RBtree.hpp"
 #include "map.hpp"
+#include "Tree_iterator.hpp"
+#include "utils_map.hpp"
 
 namespace ft
 {
-    template < class  value>
+    template <class K, class M>
     class Map_iterator
     {
         public:
-                typedef     value                                           value_type;
-                typedef     typename ft::Node<value_type>*                  iterator;
-                typedef     value_type*                                     pointer;
-                typedef     value_type&                                     reference;
+                typedef     Node<K, M>*     pointer;
+                typedef     ft::pair<K, M>  value_type;
+        
+        private:
+                pointer     _node;
+
+        pointer NextNode(pointer node)
+        {
+            pointer next;
+			if (!node->right)
+			{
+				next = node;
+				while (next->parent && next == next->parent->right)
+					next = next->parent;
+				next = next->parent;
+			}
+			else
+			{
+				next = node->right;
+				while (next->left)
+					next = next->left;
+			}
+			return (next);
+        }
+
+        pointer PreviousNode(pointer node)
+		{
+			pointer next;
+
+			if (!node->left)
+			{
+				next = node;
+				while (next->parent && next == next->parent->left)
+					next = next->parent;
+				next = next->parent;
+			}
+			else
+			{
+				next = node->left;
+				while (next->right)
+					next = next->right;
+			}
+			return (next);
+		};
+
+
         public:
-                iterator      node;
-                iterator        _last;
-        public:
-
-        // --------------- CONSTRUCTOR -------------------------
-                //Costruttore vuoto
-                Map_iterator(){};
-
-                //Costruttore di default che ha come parametro un nodo e ne costruisce
-                //Map_iterator con un nodo che punta allo stesso nodo
-                Map_iterator(Node<value_type> *obj){node = obj;};
-
-                //Copy Constructor : crea un const map_iterator che punta allo stesso nodo
-                Map_iterator(const Map_iterator &obj){node = obj.node;}
-
-                //Assegnazione
-                Map_iterator& operator=(const Map_iterator& obj)
+                //-------- COSTRUTTORI ---------------
+                Map_iterator():_node(0){};
+                Map_iterator(pointer new_node):_node(new_node){};
+                Map_iterator(const Map_iterator &other){*this = other;};
+			    Map_iterator &operator=(const Map_iterator &other)
                 {
-                    this->node = obj.node;
-                    return (*this);
-                }
-          // ----------------- OPEARATOR -------------------------
-                //pointer and reference  
-                reference       operator*() { return node->data; }
-                pointer         operator->() { return &node->data; }
-                Node<value_type>* _successor(Node<value_type>* ptr)
-                {
-                    Node<value_type>* next;
-                    if (!node->right)
-                    {
-                        next = node;
-                        while (next->parent && next == next->parent->right)
-                            next = next->parent;
-                        next = next->parent;
-                    }
-                    else
-                    {
-                        next = node->right;
-                        while (next->left)
-                            next = next->left;
-                    }
-                    return (next);
-                };
-                Map_iterator    &operator++(void)
-                {
-                   node = _successor(node);
+                    _node = other._node;
                     return (*this);
                 };
 
-                Map_iterator    operator++(int)
+                //------------ OPERATOR --------------
+                value_type &operator*(void) {return (_node->data);};
+
+                value_type *operator->(void){return (&_node->data);};
+
+                Map_iterator &operator++(void)
                 {
-                   Map_iterator tmp(*this);
-                   this->operator++();
-                   return (tmp);
+                    _node = NextNode(_node);
+                    return (*this);
                 };
 
-                Map_iterator &operator--(void)
+                Map_iterator operator++(int)
                 {
-                    iterator previous;
-                    if (!node->left)
-                    {
-                        previous = node;
-                        while (previous->parent && previous == previous->parent->left)
-                            previous = previous->parent;
-                        previous = previous->parent;
-                    }
-                    else
-                    {
-                        previous = node->left;
-                        while (previous->right)
-                            previous = previous->right;
-                    }
-                 //   if (previous != NULL)
-                        this->node = previous;
+                    Map_iterator tmp(*this);
+                    this->operator++();
+                    return (tmp);
+                };
+
+                 Map_iterator &operator--(void)
+                {
+                    _node = PreviousNode(_node);
                     return (*this);
                 };
 
                 Map_iterator operator--(int)
                 {
                     Map_iterator tmp(*this);
-                   this->operator--();
-                   return (tmp);
-                }
-        
-                bool operator==(const Map_iterator& bst_it) { return (this->node == bst_it.node); };
-                bool operator!=(const Map_iterator& bst_it) { return !(*this == bst_it);};     
+                    this->operator--();
+                    return (tmp);
+                };
+
+                bool operator==(const Map_iterator<K, M> &other){return (_node == other._node);};
+                bool operator!=(const Map_iterator<K, M> &other){return (!(*this == other));};
                 bool operator>(const Map_iterator& bst_it) { return (this->node > bst_it.node);};
                 bool operator<(const Map_iterator& bst_it){return (this->node < bst_it.node);};		
                 bool operator>=(const Map_iterator& bst_it){return (this->node >= bst_it.node);};
                 bool operator<=(const Map_iterator& bst_it){return (this->node <= bst_it.node);};
+
+                //----- GET_NODE -------
+                pointer getNode(){return (this->_node);};
     };
 
-
-    template < class  value>
+     template <class K, class M>
     class ConstMap_iterator
     {
         public:
-                typedef     value                                           value_type;
-                typedef     typename ft::Node<value_type>*                  iterator;      
-                typedef     value_type*                                     pointer;
-                typedef     value_type&                                     reference;
-
+                typedef     Node<K, M>*     pointer;
+                typedef     ft::pair<K, M>  value_type;
+        
         private:
-                iterator      node;
+                pointer     _node;
+
+        pointer NextNode(pointer node)
+        {
+            pointer next;
+			if (!node->right)
+			{
+				next = node;
+				while (next->parent && next == next->parent->right)
+					next = next->parent;
+				next = next->parent;
+			}
+			else
+			{
+				next = node->right;
+				while (next->left)
+					next = next->left;
+			}
+			return (next);
+        }
+
+        pointer PreviousNode(pointer node)
+		{
+			pointer next;
+
+			if (!node->left)
+			{
+				next = node;
+				while (next->parent && next == next->parent->left)
+					next = next->parent;
+				next = next->parent;
+			}
+			else
+			{
+				next = node->left;
+				while (next->right)
+					next = next->right;
+			}
+			return (next);
+		};
+
+
         public:
-
-        // --------------- CONSTRUCTOR -------------------------
-                //Costruttore vuoto
-                ConstMap_iterator():node(0){};
-
-                //Costruttore di default che ha come parametro un nodo e ne costruisce
-                //Map_iterator con un nodo che punta allo stesso nodo
-                ConstMap_iterator(const iterator &obj): node(obj) {};
-
-                //Copy Constructor : crea un const map_iterator che punta allo stesso nodo
-                ConstMap_iterator(const ConstMap_iterator &obj){node = obj.node;}
-
-                //Assegnazione
-                ConstMap_iterator& operator=(const ConstMap_iterator& obj)
+                //-------- COSTRUTTORI ---------------
+                ConstMap_iterator():_node(0){};
+                ConstMap_iterator(const pointer new_node):_node(new_node){};
+                ConstMap_iterator(const ConstMap_iterator &other){*this = other;};
+			    ConstMap_iterator &operator=(const ConstMap_iterator &other)
                 {
-                    this->node = obj.node;
-                    return (*this);
-                }
-          // ----------------- OPEARATOR -------------------------
-                //pointer and reference  
-                reference       operator*() { return node->data; }const
-                pointer         operator->() { return &node->data; }const
-
-                ConstMap_iterator    &operator++(void)
-                {
-                    iterator next;
-                    if (!node->right)
-                    {
-                        next = node;
-                        while (next->parent && next == next->parent->right)
-                            next = next->parent;
-                        next = next->parent;
-                    }
-                    else
-                    {
-                        next = node->right;
-                        while (next->left)
-                            next = next->left;
-                    }
-                 //   if (next != NULL)
-                        this->node = next;
+                    _node = other._node;
                     return (*this);
                 };
 
-                ConstMap_iterator    operator++(int)
+                //------------ OPERATOR --------------
+                value_type &operator*(void) const{return (_node->data);}
+
+                value_type *operator->(void)const{return (&_node->data);}
+
+                ConstMap_iterator &operator++(void)
                 {
-                   ConstMap_iterator tmp(*this);
-                   this->operator++();
-                   return (tmp);
+                    _node = NextNode(_node);
+                    return (*this);
                 };
 
-                ConstMap_iterator   &operator--(void)
+                ConstMap_iterator operator++(int)
                 {
-                    iterator previous;
-                    if (!node->left)
-                    {
-                        previous = node;
-                        while (previous->parent && previous == previous->parent->left)
-                            previous = previous->parent;
-                        previous = previous->parent;
-                    }
-                    else
-                    {
-                        previous = node->left;
-                        while (previous->right)
-                            previous = previous->right;
-                    }
-                   // if (previous != NULL)
-                        this->node = previous;
+                    ConstMap_iterator tmp(*this);
+                    this->operator++();
+                    return (tmp);
+                };
+
+                 ConstMap_iterator &operator--(void)
+                {
+                    _node = PreviousNode(_node);
                     return (*this);
                 };
 
@@ -198,73 +201,92 @@ namespace ft
                     ConstMap_iterator tmp(*this);
                     this->operator--();
                     return (tmp);
-                }
-        
-                bool operator==(const ConstMap_iterator& bst_it) { return (this->node == bst_it.node); };
-                bool operator!=(const ConstMap_iterator& bst_it) { return !(*this == bst_it);};     
+                };
+
+                bool operator==(const ConstMap_iterator<K, M> &other){return (_node == other._node);};
+                bool operator!=(const ConstMap_iterator<K, M> &other){return (!(*this == other));};
                 bool operator>(const ConstMap_iterator& bst_it) { return (this->node > bst_it.node);};
                 bool operator<(const ConstMap_iterator& bst_it){return (this->node < bst_it.node);};		
                 bool operator>=(const ConstMap_iterator& bst_it){return (this->node >= bst_it.node);};
                 bool operator<=(const ConstMap_iterator& bst_it){return (this->node <= bst_it.node);};
+                
+                //----- GET_NODE -------
+                pointer getNode(){return (this->_node);};
     };
 
-
-    template < class  value>
+    template <class K, class M>
     class Map_Reverse_iterator
     {
         public:
-                typedef     value                                           value_type;
-                typedef     typename ft::Node<value_type>*                  iterator;
-                typedef     value_type*                                     pointer;
-                typedef     value_type&                                     reference;
+                typedef     Node<K, M>*     pointer;
+                typedef     ft::pair<K, M>  value_type;
+        
         private:
-                iterator      node;
+                pointer     _node;
+
+        pointer NextNode(pointer node)
+        {
+            pointer next;
+			if (!node->right)
+			{
+				next = node;
+				while (next->parent && next == next->parent->right)
+					next = next->parent;
+				next = next->parent;
+			}
+			else
+			{
+				next = node->right;
+				while (next->left)
+					next = next->left;
+			}
+			return (next);
+        }
+
+        pointer PreviousNode(pointer node)
+		{
+			pointer next;
+
+			if (!node->left)
+			{
+				next = node;
+				while (next->parent && next == next->parent->left)
+					next = next->parent;
+				next = next->parent;
+			}
+			else
+			{
+				next = node->left;
+				while (next->right)
+					next = next->right;
+			}
+			return (next);
+		};
+
+
         public:
-
-        // --------------- CONSTRUCTOR -------------------------
-                //Costruttore vuoto
-                Map_Reverse_iterator(){};
-
-                //Costruttore di default che ha come parametro un nodo e ne costruisce
-                //Map_iterator con un nodo che punta allo stesso nodo
-                Map_Reverse_iterator(Node<value_type> *obj){node = obj;};
-
-                //Copy Constructor : crea un const map_iterator che punta allo stesso nodo
-                Map_Reverse_iterator(const Map_Reverse_iterator &obj){node = obj.node;}
-
-                //Assegnazione
-                Map_Reverse_iterator& operator=(const Map_Reverse_iterator& obj)
+                //-------- COSTRUTTORI ---------------
+                Map_Reverse_iterator():_node(0){};
+                Map_Reverse_iterator(pointer new_node):_node(new_node){};
+                Map_Reverse_iterator(const Map_Reverse_iterator &other){*this = other;};
+			    Map_Reverse_iterator &operator=(const Map_Reverse_iterator &other)
                 {
-                    this->node = obj.node;
+                    _node = other._node;
                     return (*this);
-                }
-          // ----------------- OPEARATOR -------------------------
-                //pointer and reference  
-                reference       operator*() { return node->data; }
-                pointer         operator->() { return &node->data; }
+                };
 
-                Map_Reverse_iterator    &operator++(void)
+                //------------ OPERATOR --------------
+                value_type &operator*(void) {return (_node->data);};
+
+                value_type *operator->(void){return (&_node->data);};
+
+                Map_Reverse_iterator &operator++(void)
                 {
-                    iterator previous;
-                    if (!node->left)
-                    {
-                        previous = node;
-                        while (previous->parent && previous == previous->parent->left)
-                            previous = previous->parent;
-                        previous = previous->parent;
-                    }
-                    else
-                    {
-                        previous = node->left;
-                        while (previous->right)
-                            previous = previous->right;
-                    }
-                  //  if (previous != NULL)
-                        this->node = previous;
+                    _node = PreviousNode(_node);
                     return (*this);
-                }
+                };
 
-                Map_Reverse_iterator    operator++(int)
+                Map_Reverse_iterator operator++(int)
                 {
                     Map_Reverse_iterator tmp(*this);
                     this->operator++();
@@ -273,22 +295,7 @@ namespace ft
 
                 Map_Reverse_iterator &operator--(void)
                 {
-                    iterator next;
-                    if (!node->right)
-                    {
-                        next = node;
-                        while (next->parent && next == next->parent->right)
-                            next = next->parent;
-                        next = next->parent;
-                    }
-                    else
-                    {
-                        next = node->right;
-                        while (next->left)
-                            next = next->left;
-                    }
-                 //   if (next != NULL)
-                        this->node = next;
+                    _node = NextNode(_node);
                     return (*this);
                 };
 
@@ -297,72 +304,92 @@ namespace ft
                     Map_Reverse_iterator tmp(*this);
                     this->operator--();
                     return (tmp);
-                }
-        
-                bool operator==(const Map_Reverse_iterator& bst_it) { return (this->node == bst_it.node); };
-                bool operator!=(const Map_Reverse_iterator& bst_it) { return !(*this == bst_it); };     
+                };
+
+                bool operator==(const Map_Reverse_iterator<K, M> &other){return (_node == other._node);};
+                bool operator!=(const Map_Reverse_iterator<K, M> &other){return (!(*this == other));};
                 bool operator>(const Map_Reverse_iterator& bst_it) { return (this->node > bst_it.node);};
                 bool operator<(const Map_Reverse_iterator& bst_it){return (this->node < bst_it.node);};		
                 bool operator>=(const Map_Reverse_iterator& bst_it){return (this->node >= bst_it.node);};
                 bool operator<=(const Map_Reverse_iterator& bst_it){return (this->node <= bst_it.node);};
+
+                //----- GET_NODE -------
+                pointer getNode(){return (this->_node);};
     };
 
-    template < class  value>
+    template <class K, class M>
     class Const_Map_Reverse_iterator
     {
         public:
-                typedef     value                                           value_type;
-                typedef     typename ft::Node<value_type>*                  iterator;
-                typedef     value_type*                                     pointer;
-                typedef     value_type&                                     reference;
+                typedef     Node<K, M>*     pointer;
+                typedef     ft::pair<K, M>  value_type;
+        
         private:
-                iterator      node;
+                pointer     _node;
+
+        pointer NextNode(pointer node)
+        {
+            pointer next;
+			if (!node->right)
+			{
+				next = node;
+				while (next->parent && next == next->parent->right)
+					next = next->parent;
+				next = next->parent;
+			}
+			else
+			{
+				next = node->right;
+				while (next->left)
+					next = next->left;
+			}
+			return (next);
+        }
+
+        pointer PreviousNode(pointer node)
+		{
+			pointer next;
+
+			if (!node->left)
+			{
+				next = node;
+				while (next->parent && next == next->parent->left)
+					next = next->parent;
+				next = next->parent;
+			}
+			else
+			{
+				next = node->left;
+				while (next->right)
+					next = next->right;
+			}
+			return (next);
+		};
+
+
         public:
-
-        // --------------- CONSTRUCTOR -------------------------
-                //Costruttore vuoto
-                Const_Map_Reverse_iterator(){};
-
-                //Costruttore di default che ha come parametro un nodo e ne costruisce
-                //Map_iterator con un nodo che punta allo stesso nodo
-                Const_Map_Reverse_iterator(Node<value_type> *obj){node = obj;};
-
-                //Copy Constructor : crea un const map_iterator che punta allo stesso nodo
-                Const_Map_Reverse_iterator(const Const_Map_Reverse_iterator &obj){node = obj.node;}
-
-                //Assegnazione
-                Const_Map_Reverse_iterator& operator=(const Const_Map_Reverse_iterator& obj)
+                //-------- COSTRUTTORI ---------------
+                Const_Map_Reverse_iterator():_node(0){};
+                Const_Map_Reverse_iterator(const pointer new_node):_node(new_node){};
+                Const_Map_Reverse_iterator(const Const_Map_Reverse_iterator &other){*this = other;};
+			    Const_Map_Reverse_iterator &operator=(const Const_Map_Reverse_iterator &other)
                 {
-                    this->node = obj.node;
+                    _node = other._node;
                     return (*this);
-                }
-          // ----------------- OPEARATOR -------------------------
-                //pointer and reference  
-                reference       operator*() { return node->data; }const
-                pointer         operator->() { return &node->data; }const
+                };
 
-                Const_Map_Reverse_iterator    &operator++(void)
+                //------------ OPERATOR --------------
+                value_type &operator*(void)const {return (_node->data);};
+
+                value_type *operator->(void)const{return (&_node->data);};
+
+                Const_Map_Reverse_iterator &operator++(void)
                 {
-                    iterator previous;
-                    if (!node->left)
-                    {
-                        previous = node;
-                        while (previous->parent && previous == previous->parent->left)
-                            previous = previous->parent;
-                        previous = previous->parent;
-                    }
-                    else
-                    {
-                        previous = node->left;
-                        while (previous->right)
-                            previous = previous->right;
-                    }
-                  //  if (previous != NULL)
-                        this->node = previous;
+                    _node = PreviousNode(_node);
                     return (*this);
-                }
+                };
 
-                Const_Map_Reverse_iterator    operator++(int)
+                Const_Map_Reverse_iterator operator++(int)
                 {
                     Const_Map_Reverse_iterator tmp(*this);
                     this->operator++();
@@ -371,22 +398,7 @@ namespace ft
 
                 Const_Map_Reverse_iterator &operator--(void)
                 {
-                    iterator next;
-                    if (!node->right)
-                    {
-                        next = node;
-                        while (next->parent && next == next->parent->right)
-                            next = next->parent;
-                        next = next->parent;
-                    }
-                    else
-                    {
-                        next = node->right;
-                        while (next->left)
-                            next = next->left;
-                    }
-                 //   if (next != NULL)
-                        this->node = next;
+                    _node = NextNode(_node);
                     return (*this);
                 };
 
@@ -395,14 +407,17 @@ namespace ft
                     Const_Map_Reverse_iterator tmp(*this);
                     this->operator--();
                     return (tmp);
-                }
-        
-                bool operator==(const Const_Map_Reverse_iterator& bst_it) { return (this->node == bst_it.node); };
-                bool operator!=(const Const_Map_Reverse_iterator& bst_it) { return !(*this == bst_it); };     
+                };
+
+                bool operator==(const Const_Map_Reverse_iterator<K, M> &other){return (_node == other._node);};
+                bool operator!=(const Const_Map_Reverse_iterator<K, M> &other){return (!(*this == other));};
                 bool operator>(const Const_Map_Reverse_iterator& bst_it) { return (this->node > bst_it.node);};
                 bool operator<(const Const_Map_Reverse_iterator& bst_it){return (this->node < bst_it.node);};		
                 bool operator>=(const Const_Map_Reverse_iterator& bst_it){return (this->node >= bst_it.node);};
                 bool operator<=(const Const_Map_Reverse_iterator& bst_it){return (this->node <= bst_it.node);};
+
+                //----- GET_NODE -------
+                pointer getNode(){return (this->_node);};
     };
 };
 

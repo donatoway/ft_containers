@@ -1,6 +1,7 @@
 #ifndef UTILS_MAP_HPP
 #define UTILS_MAP_HPP
 
+#include "utils_map.hpp"
 
 namespace ft
 {
@@ -19,6 +20,24 @@ namespace ft
             {
                 bool operator() (const T& x, const T& y) const { return (x < y); }
             };
+
+             template <typename U>
+                void swap(U& a, U& b)
+                {
+                    U tmp = a;
+                    a = b;
+                    b = tmp;
+                }
+
+    template <class Key, class T>
+	struct Node
+	{
+		ft::pair<Key, T> data;
+		Node *left;
+		Node *right;
+		Node *parent;
+		bool end;
+	};
 }
 
 

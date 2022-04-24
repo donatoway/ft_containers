@@ -3,15 +3,16 @@
 
 #include <iostream>
 #include "pair.hpp"
-#include "RBtree.hpp"
 #include "Tree_iterator.hpp"
 #include "utils_map.hpp"
+#include "map.hpp"
 
 
 
 namespace ft
 {
-    template<class Key, class T, class Compare = ft::less<Key>, class Allocator = std::allocator<Node<ft::pair<Key, T> > > >
+
+    template<class Key, class T, class Compare = ft::less<Key>, class Allocator = std::allocator<Node< Key, T> > >
     class map
     {
         public:
@@ -22,11 +23,11 @@ namespace ft
                 typedef      typename   std::size_t                                 size_type;
                 typedef                 Allocator                                   allocator_type;
                 typedef      typename   allocator_type::pointer                     pointer;
-                typedef      typename   ft::RBTree<value_type, key_type>            tree;
-                typedef      typename   ft::Map_iterator<value_type>                iterator;
-                typedef      typename   ft::ConstMap_iterator<value_type>           Map_iterator_const;
-                typedef      typename   ft::Map_Reverse_iterator<value_type>        Reverse_iterator;
-                typedef     typename    ft::Const_Map_Reverse_iterator<value_type>  Const_Rev_Map_Iterator;
+                typedef                 Node<Key,T>                                 Node;
+                typedef      typename   ft::Map_iterator<Key, T>                    iterator;
+                typedef      typename   ft::ConstMap_iterator<Key, T>               Map_iterator_const;
+                typedef      typename   ft::Map_Reverse_iterator<Key, T>            Reverse_iterator;
+                typedef     typename    ft::Const_Map_Reverse_iterator<Key, T>      Const_Rev_Map_Iterator;
 
                 class value_compare
 			    {
@@ -43,242 +44,273 @@ namespace ft
                             return comp(x.first, y.first);
                         };
 			    };
-        public:
-                pointer                 _first;
-                pointer                 _last;
-                tree                    _tree;
-             //  pointer                 _map;
+        private:
+                value_type              _pair_value;
+                pointer                 _root;
+                Key_compare              _comp;
                 allocator_type          _allocation;
                 size_type               _size;
+
+                pointer _new_node(key_type key, mapped_type value, pointer parent, bool end = false)
+                {
+
+                    Node* new_node =  _allocation.allocate(1);
+                    _allocation.construct(new_node);
+                    new_node->right= 0;
+                    new_node->left = 0;
+                    new_node->parent = parent;
+                    new_node->end = end;
+                    new_node->data = ft::make_pair(key, value);
+                    return (new_node);
+                };
+
+                Node* _insert_node(Node* n, key_type key, mapped_type value, bool end = false)
+                {
+                    if (n->end)
+                    {
+                        if (!n->left)
+                        {
+                            n->left = _new_node(key, value, n, end);
+                            return (n->left);
+                        }
+                        return (_insert_node(n->left, key, value));
+                    }
+                    if (key < n->data.first && !end)
+                    {
+                        if (!n->left)
+                        {
+                            n->left = _new_node(key, value, n, end);
+                            return (n->left);
+                        }
+                        else
+                            return (_insert_node(n->left, key, value));
+                    }
+                    else
+                    {
+                        if (!n->right)
+                        {
+                            n->right = _new_node(key, value, n, end);
+                            return (n->right);
+                        }
+                        else
+                            return(_insert_node(n->right, key, value));
+                    }
+
+                };
+
+                void    print(std::string str = 0, Node* n = 0)
+                {
+                        std::cout << n->data.first << " : " << str << "\n";
+                }
+
+                void Print_in_order(Node *x)
+                {
+                    if (x == NULL)
+                    return;
+                    Print_in_order(x->left);
+                    std::cout << "first " << x->data.first << " second " << x->data.second << std::endl;
+                    Print_in_order(x->right);
+                }
+
+                Node* _find(Node *n, key_type key) const
+                {
+                    Node* tmp;
+                    if (!n->end && n->data.first == key && n->parent)
+                        return (n);
+                    if (n->right)
+                    {
+                        if ((tmp = _find(n->right, key)))
+                            return (tmp);
+                    }
+                    if (n->left)
+                    {
+                        if ((tmp = _find(n->left, key)))
+                            return (tmp);
+                    }
+                    return (0);
+                };
+
+                void _delete_node(Node* n)
+                {
+                    Node* parent = n->parent;
+                    if (!n->left && !n->right)
+                    {
+                        if (parent->right == n)
+                            parent->right = 0;
+                        else
+                            parent->left = 0;
+                        delete n;
+                        return ;
+                    }
+                    if (n->right && !n->left)
+                    {
+                        if (parent->right == n)
+                            parent->right = n->right;
+                        else
+                            parent->left = n->right;
+                        n->right->parent = parent;
+                        delete n;
+                        return ;
+                    }
+                    if (n->left && !n->right)
+                    {
+                        if (parent->right == n)
+                            parent->right = n->left;
+                        else
+                            parent->left = n->left;
+                        n->left->parent = parent;
+                        delete n;
+                        return ;
+                    }
+                    Node* next = (++iterator(n)).getNode();
+                    if (!next)
+                        next = (--iterator(n)).getNode();
+                    ft::swap(next->data,n->data);
+                    _delete_node(next);
+                };
         public:
                 // costruttore di default
-                explicit map( const Compare& comp = Key_compare() ,  const Allocator& alloc = Allocator() )
+                explicit map( const Compare& comp = Key_compare() ,  const Allocator& alloc = Allocator() ):
+                _allocation(alloc), _comp(comp)
                 {
-                    _tree.root = NULL;
-                    _tree.pt = NULL;
-                    _tree._size = 0;
-                   // _first = NULL;
+                    _root = _new_node(key_type(), mapped_type(), 0);
+                    _root->right = _new_node(key_type(), mapped_type(), _root, true);
+                    _size = 0;            
                 }
+              
+                //------------------- ITERATOR -------------------
 
-                // Range constructor
-                // Costruisce un container con elementi da firts-last, con ogni elemento costruito dal suo corrispndente elemento
-                template <class InputIterator>
-                map (InputIterator first, InputIterator last, const Key_compare& comp = Key_compare(),\
-                        const allocator_type& alloc = allocator_type())
+                iterator begin(void)
                 {
-                    _tree.root = NULL;
-                    _tree.pt = NULL;
-                    _tree._size = 0;
-                  //  _first = NULL;
-                    for (; first != last; ++first)
-                    {
-                        _tree.insert(*first);
-                    }
-                 //   _map = _tree;
-                    
-                }
-
-                // Copy constructor
-                map(const map& obj)
-                {
-                    this->_tree._allocation = obj._tree._allocation;
-                    this->_tree = obj._tree;
-                 //   this->_map = obj._map;
-                //    this->_first = obj._first;
-                //    this->_end = obj._end;
-                    this->_size = obj._size;
-                }
-
-                //assign
-                map &operator=(const map &map)
-                {
-                //    this->_map = map._map;
-                 //   this->_first = map._first;
-                 //   this->_end = map._end;
-                    this->_tree._allocation = map._tree._allocation;
-                    this->_tree = map._tree;
-                    this->_size = map._size;
-                    return (*this);
-                }
-
-                void print(Node<value_type> *_map)
-                {
-                    if (_map == NULL)
-                    return;
-            
-                    print(_map->left);
-                    std::cout << _map->data.first <<  " " << _map->data.second << "\n";
-                    print(_map->right);
-                    
-                }
-
-
-
-            //--------------------- ITERATOR ------------------------------
-
-            //    Map_iterator_const                          begin()const{ return Map_iterator_const(_first);};
-
-                iterator                                    begin()
-                { 
-                    Node<value_type>  *n = _tree.get_root();
+                    Node *n = _root;
                     if (!n->left && !n->right)
                         return (end());
                     if (!n->left && n->right)
                         n = n->right;
                     while (n->left)
                         n = n->left;
-                    return iterator(n);
-                };
-                
-          //      Map_iterator_const                           end()const{ return Map_iterator_const(_end);};
-                
-                Node<value_type> *_end(void) const
-                {
-                    return (_tree.root->right);
-                };
-                iterator                                    end()
-                {
-                    return iterator(_end());
+                    return (iterator(n));
                 };
 
-           //     Reverse_iterator                            rbegin(){ return (Map_Reverse_iterator<value_type>(_end));};
-
-           //     Reverse_iterator                            rend(){ return (Map_Reverse_iterator<value_type>(_first->left));};
-
-          //      Const_Map_Reverse_iterator<value_type>      rbegin()const{return Const_Map_Reverse_iterator<value_type>(_end);};
-
-          //      Const_Map_Reverse_iterator<value_type>      rend()const{return(Const_Map_Reverse_iterator<value_type>(_first->left)); };
-
-
-            // -------------------------- CAPACITY ----------------------------
-                size_type size() const {return (this->_size);};
-
-                size_type max_size() const{return (_allocation.max_size());};
-
-                bool empty() const {return !(_size);};
-
-            // ------------------------- ELEMENT ACCESS -----------------------
-
-                //Se k è una chiave di un elemento nel container ritorna quella coppia di valori,
-                //Altrimenti se k non esiste, inserisce una nuova coppia di valori Key = k
-                mapped_type& operator[] (const key_type& k)
+                iterator end(void)
                 {
-                    iterator it = find(k);
-                    if (it == end()) //se non esiste it = insert
-                        insert(ft::make_pair(k, mapped_type()));
-                    it = find(k);
-                    return (it->second);
+                    return (iterator(_root->right));
+                };
+
+                Map_iterator_const begin(void)const
+                {
+                    Node *n = _root;
+                    if (!n->left && !n->right)
+                        return (end());
+                    if (!n->left && n->right)
+                        n = n->right;
+                    while (n->left)
+                        n = n->left;
+                    return (Map_iterator_const(n));
+                };
+
+                Map_iterator_const end(void)const
+                {
+                    return (Map_iterator_const(_root->right));
+                };
+
+                Reverse_iterator rbegin(void)
+                {
+                    iterator i = end();
+                    i--;
+                    return (Reverse_iterator(i.getNode()));
+                };
+                Const_Rev_Map_Iterator rbegin(void) const
+                {
+                    Map_iterator_const i = end();
+                    i--;
+                    return (Const_Rev_Map_Iterator(i.getNode()));
+                };
+                Reverse_iterator rend(void)
+                {
+                    return (Reverse_iterator(this->_root));
+                };
+                Const_Rev_Map_Iterator rend(void) const
+                {
+                    return (Const_Rev_Map_Iterator(_root));
+                };
+
+
+
+
+                //---------------
+
+                bool empty(void) const
+                {
+                    return (_size == 0);
+                };
+                iterator find(const key_type &value)
+                {
+                    if (empty())
+                        return (end());
+                    Node* tmp = _find(_root, value);
+                    if (tmp)
+                        return (iterator(tmp));
+                    return (end());
+                };
+
+
+                // -------------- MODIFIERS -------------------
+                ft::pair<iterator, bool> insert(const value_type &value)
+                {
+                    iterator tmp;
+
+                    if ((tmp = find(value.first)) != end())
+                        return (ft::make_pair(tmp, false));
+                    _size++;
+                    return (ft::make_pair(iterator(_insert_node(_root, value.first, value.second)), true));
+                };
+
+                iterator insert (iterator position, const value_type& val)
+                {
+                    insert(val);
+                    return  (position);
                 }
 
-            //------------------------- OPERATION -------------------------------
-
-                iterator find (const key_type& k)
+                void insert (iterator first, iterator last)
                 {
-                    pointer temp = _tree.get_root();
-                        
-                    while (temp != NULL)
+                    while (first != last)
                     {
-                        if (k < temp->data.first)
-                        {
-                            if (temp->left == NULL)
-                                break;
-                            else
-                                temp = temp->left;
-                        }
-                        else if (k == temp->data.first)
-                            break;
-                        else
-                        {
-                            if (temp->right == NULL)
-                                break;
-                            else
-                                temp = temp->right;
-                        }
+                         insert(*first);
+                         first++;
                     }
-                    iterator it = temp;
-                        return it;
                 }
-                //count: trova il parametro k, se è presente ritorna 1 altrimenti 0
-                size_type count (const key_type& k) const
+
+                void erase(iterator position)
                 {
-                    size_t c = 0;
-                    ConstMap_iterator<value_type> it;
+                    _delete_node(position.getNode());
+                    --_size;
+                };
 
-                    for (it = begin(); it != end(); it++)
-                        if (it->first == k)
-                            return (1);
-                    return (0);
-                }
-
-
-             //   void print2(){print(_map);};
-            
-
-        
-        //--------------------------- MODIFIERS ------------------------------
-                
-                void insert( const value_type& value )
+                size_type erase(const key_type &value)
                 {
-                    _tree.insert(value); 
-                    _size = _tree.size();
-                }
+                    int i = 0;
+                    iterator item;
+                    while ((item = find(value)) != end())
+                    {
+                        erase(item);
+                        ++i;
+                    };
+                    return (i);
+                };
 
-                //swap : scambia il contenuto del container con quello passato come parametro
-                template <typename U>
-                void swap(U& a, U& b)
+                void erase(iterator first, iterator last)
                 {
-                    U tmp = a;
-                    a = b;
-                    b = tmp;
-                }
+                    while (first != last)
+                        erase(first++);
+                };
 
                 void swap (map& x)
                 {
-                    swap(this->_tree, x._tree);
-                    swap(this->_tree._allocation, x._tree._allocation);
-                 //   swap(this->_allocation,x._allocation);
-                    swap(this->_size,x._size);
-                 //   swap(this->_end ,x._end);
-                 //   swap(this->_first,x._first);
+                    swap(this->_root, x._root);
+                    swap(this->_size, x._size);
                 } 
-
-                size_type erase (const key_type& k)
-                {
-                   _tree.deleteByVal(k);
-                    return (_size);
-                }
-
-                void erase (iterator position)
-                 {   
-                    erase(position.node->data.first);
-                 }
-                
-               
-                 void erase (iterator first, iterator last)
-                 {        
-                    iterator it = first;
-                    while (first != last)
-                    {
-                        it = first;
-                        erase(first->first);
-                        first++;
-                    }
-                 }
-
-        //-------------------------------- OBSERVES -------------------------------
-                //ritorna una copia della comparazione della chiave
-                Key_compare     key_comp() const {return (Compare());};
-
-                //ritorna un oggetto di comparazione
-                value_compare   value_comp() const {return (value_compare(Key_compare()));};
-                
-                
-                ~map()
-                {
-                    
-                }
-        //--------------------------- ALLOCATORS --------------------
-        allocator_type get_allocator() const {return (_tree._allocation);};
+            
     };
 }
 
