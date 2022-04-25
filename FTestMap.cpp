@@ -139,14 +139,125 @@ void testModifiers()
     pair = ft::make_pair(55, 10);
     map2.insert(map2.begin(), pair);
     std::cout <<  "first : " << map2.find(55)->first << " second "<< map2.find(55)->second<< "\n";
+
+    std::cout << "test erase whit a key\n";
+    std::cout << "remove 2\n";
+    map1.erase(2);
+    for (it = map1.begin(); it != map1.end(); it++)
+         std::cout << "first : " << it->first << " second : " << it->second << "\n";
+     std::cout << "test erase range iterator\n";
+     std::cout << "removes elements from 5 to 9\n";
+    map1.erase(map1.find(5), map1.end());
+    for (it = map1.begin(); it != map1.end(); it++)
+         std::cout << "first : " << it->first << " second : " << it->second << "\n";
+
+    std::cout << "test clear\n";
+    map1.clear();
+    if (map1.empty())
+        std::cout << "map container is empty\n";
+    std::cout << "test swap\nmap1 now is map2\n";
+    map1.swap(map2);
+    for (it = map1.begin(); it != map1.end(); it++)
+         std::cout << "first : " << it->first << " second : " << it->second << "\n";
+
 }
 
+void    testObserves2()
+{
+     std::cout << "\nTEST VALUE_COMPARE\n";
+    ft::map<char,int> mymap;
+
+    mymap['x']=1001;
+    mymap['y']=2002;
+    mymap['z']=3003;
+
+    std::cout << "mymap contains:\n";
+
+    ft::pair<char,int> highest = *mymap.rbegin();          // last element
+
+    ft::map<char,int>::iterator it = mymap.begin();
+    do {
+        std::cout << it->first << " => " << it->second << '\n';
+    } while ( mymap.value_comp()(*it++, highest) );
+}
+
+void    testObserves()
+{
+    std::cout << GREEN<<"TEST KEY_COMP\n";
+    ft::map<char,int> mymap;
+
+    ft::map<char,int>::Key_compare mycomp = mymap.key_comp();
+
+    mymap['a']=100;
+    mymap['b']=200;
+    mymap['c']=300;
+
+    std::cout << "mymap contains:\n";
+
+    char highest = mymap.rbegin()->first;     // key value of last element
+
+    ft::map<char,int>::iterator it = mymap.begin();
+    do {
+        std::cout << it->first << " => " << it->second << '\n';
+    } while ( mycomp((*it++).first, highest) );
+    testObserves2();
+}
+
+void    testOperation()
+{
+    ft::map<char,int> mymap;
+
+    mymap['a'] = 1;
+    mymap['b'] = 2;
+    mymap['c'] = 3;
+    mymap['d'] = 3;
+    mymap['e'] = 3;
+
+    std::cout <<GREEN << "TEST OPERATION\ntest find\n";
+
+    std::cout << "if map have an 'a' elemnt print it:\n";
+    if ( mymap.find('a')->first)
+        std::cout << mymap.find('a')->first << "\n";
+    std::cout << "test count\n";
+    std::cout << "if map have an 'c' elemnt print it:\n";
+    if (mymap.count('c'))
+        std::cout << "element c found\n";
+
+    std::cout << "test lower_bound and upper_bound\n";
+
+    ft::map<char, int>::iterator it;
+
+    for (it = mymap.lower_bound('b'); it != mymap.upper_bound('d'); it++)
+        std::cout << it->first << "\n";
+
+    std::cout << "test equal_range\n";
+    ft::pair<ft::map<char,int>::iterator,ft::map<char,int>::iterator> ret;
+    ret = mymap.equal_range('b');
+
+    std::cout << "lower value in the range is : " << ret.first->first << "\n";
+    std::cout << "high value in the range is : " << ret.second->first << "\n";
+
+}
 
 int main()
 {
-   // testConstructor();
-  //  testIterator();
-  //  testCapacity();
- //   testEementAccess();
+    testConstructor();
+    std::cout << "\n\n-----------------------\n\n";
+    testIterator();
+    std::cout << "\n\n-----------------------\n\n";
+    testCapacity();
+    std::cout << "\n\n-----------------------\n\n";
+    testEementAccess();
+    std::cout << "\n\n-----------------------\n\n";
     testModifiers();
+    std::cout << "\n\n-----------------------\n\n";
+    testObserves();
+    std::cout << "\n\n-----------------------\n\n";
+    testOperation();
+
+
+
+
+
+
 }

@@ -51,6 +51,14 @@ namespace ft
                 allocator_type          _allocation;
                 size_type               _size;
 
+                template <typename U>
+                void swap(U& a, U& b)
+                {
+                    U tmp = a;
+                    a = b;
+                    b = tmp;
+                }
+                
                 pointer _new_node(key_type key, mapped_type value, pointer parent, bool end = false)
                 {
 
