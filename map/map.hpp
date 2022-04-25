@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include "pair.hpp"
-#include "Tree_iterator.hpp"
+#include "map_iterator.hpp"
 #include "utils_map.hpp"
 #include "map.hpp"
 
@@ -213,6 +213,13 @@ namespace ft
                     insert(x.begin(), x.end());
                     
                     return (*this);
+                }
+
+                ~map()
+                {
+                    clear();
+					_allocation.deallocate(_root, 1);
+                    _allocation.deallocate(_root->right, 1);
                 }
 
                 allocator_type get_allocator() const {return (this->_allocation);};

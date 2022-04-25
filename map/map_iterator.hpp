@@ -1,9 +1,9 @@
-#ifndef TREE_ITERATOR_HPP
-#define TREE_ITERATOR_HPP
+#ifndef MAP_ITERATOR_HPP
+#define MAP_ITERATOR_HPP
 
 #include "../vector/iterators.hpp"
 #include "map.hpp"
-#include "Tree_iterator.hpp"
+#include "map_iterator.hpp"
 #include "utils_map.hpp"
 
 namespace ft
