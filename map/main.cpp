@@ -22,16 +22,15 @@ int main()
       pai = ft::make_pair(i, i);
     map1.insert(pai);
   }
-  const ft::map<int,int> map2(map1);
-  ft::map<int, int>::Const_Rev_Map_Iterator it;
-
-    for (it = map2.rbegin(); it != map2.rend(); it++)
-    {
-        std::cout << it->first << "\n";
-    }
 
 
-    //ITERATOR, INSERT, DELETE COMPLETATI!!!!!
-    // FARE DA SOLO TUTTE LE RESTANTI FUNZIONI DAJE!!!!
+  ft::pair<ft::map<int, int>::iterator, ft::map<int, int>::iterator >  a;
+
+  a = map1.equal_range(9);
+  
+   std::cout << a.first->first << "\n";
+  std::cout << a.second->first << "\n";
+
+
   return 0;
 }

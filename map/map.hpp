@@ -169,7 +169,9 @@ namespace ft
                     _delete_node(next);
                 };
         public:
-                // costruttore di default
+                // -------------- MEMBER FUNCTION -------------------------------------------
+
+                // COSTRUTTORE DI DEFAULT
                 explicit map( const Compare& comp = Key_compare() ,  const Allocator& alloc = Allocator() ):
                 _allocation(alloc), _comp(comp)
                 {
@@ -177,8 +179,53 @@ namespace ft
                     _root->right = _new_node(key_type(), mapped_type(), _root, true);
                     _size = 0;            
                 }
+
+                // COSTRUTTORE RANGE ITERATOR
+                template <class InputIterator> map (InputIterator first, InputIterator last,const Key_compare& comp = Key_compare(),
+                    const allocator_type& alloc = allocator_type())
+                    :_size(0), _allocation(alloc)
+                {
+                    _root = _new_node(key_type(), mapped_type(), 0);
+                    _root->right = _new_node(key_type(), mapped_type(), _root, true);
+                    while (first != last)
+                    {
+                        insert(*first);
+                        first++;
+                    }
+                }
+
+                // COPY CONSTRUCTOR
+                map (const map& x)
+                {
+                    _root = _new_node(key_type(), mapped_type(), 0);
+                    _root->right = _new_node(key_type(), mapped_type(), _root, true);
+                    _size = 0;
+                    *this = x;
+                }
+                // ASSIGN OPERATOR
+                map& operator= (const map& x)
+                {
+                    if (this->_size > 0)
+                        erase(begin(), end());
+                    _root = _new_node(key_type(), mapped_type(), 0);
+                    _root->right = _new_node(key_type(), mapped_type(), _root, true);
+
+                    insert(x.begin(), x.end());
+                    
+                    return (*this);
+                }
+
+                allocator_type get_allocator() const {return (this->_allocation);};
+
+                //------------------- CAPACITY -----------------------------------------
+
+                size_type size() const {return (this->_size);};
+
+                size_type max_size() const{return (_allocation.max_size());};
+                
+                bool empty(void) const{ return (_size == 0);};
               
-                //------------------- ITERATOR -------------------
+                //------------------- ITERATOR ------------------------------------------
 
                 iterator begin(void)
                 {
@@ -235,15 +282,17 @@ namespace ft
                     return (Const_Rev_Map_Iterator(_root));
                 };
 
+                //------------------- ELEMENT ACCESS -------------------------------
 
-
-
-                //---------------
-
-                bool empty(void) const
+                mapped_type& operator[] (const key_type& k)
                 {
-                    return (_size == 0);
-                };
+                    iterator it = find(k);
+                    if (it == end()) //se non esiste it = insert
+                        insert(ft::make_pair(k, mapped_type()));
+                    it = find(k);
+                    return (it->second);
+                }
+                // ----------------------- OPERATION ---------------------------------
                 iterator find(const key_type &value)
                 {
                     if (empty())
@@ -254,8 +303,101 @@ namespace ft
                     return (end());
                 };
 
+                size_type count (const key_type& k) const
+                {
+                    size_t c = 0;
+                    ConstMap_iterator<key_type, mapped_type> it;
 
-                // -------------- MODIFIERS -------------------
+                    for (it = begin(); it != end(); it++)
+                        if (it->first == k)
+                            return (1);
+                    return (0);
+                }
+
+                iterator lower_bound (const key_type& k)
+                {
+                    iterator it;
+
+                    for (it = begin(); it != end(); it++)
+                    {
+                        if (_comp(it->first, k) == 0)
+                            return it;
+                    }
+                    return end();
+                }
+
+                Map_iterator_const lower_bound (const key_type& k) const
+                {
+                    Map_iterator_const it;
+
+                    for (it = begin(); it != end(); it++)
+                    {
+                        if (_comp(it->first, k) == 0)
+                            return it;
+                    }
+                    return end();
+                }
+
+                
+                 iterator upper_bound (const key_type& k)
+                 {
+                    iterator it;
+
+                    for (it = begin(); it != end(); it++)
+                    {
+                        if (_comp(k, (*it).first))
+                            return it;
+                    }
+                    return end();
+                 }
+
+                 Map_iterator_const upper_bound (const key_type& k)const
+                 {
+                    Map_iterator_const it;
+
+                    for (it = begin(); it != end(); it++)
+                    {
+                        if (_comp(k, (*it).first))
+                            return it;
+                    }
+                    return end();
+                 }
+
+                /*
+                    EQUALRANGE : prende come parametro una chiave e ritorna
+                     il primo lower_bound
+                    trovato e lo assegna al primo elemento del nuovo pair e
+                    l'upper_bound al secondo
+                */
+
+               ft::pair<iterator,iterator>             equal_range (const key_type& k)
+               {
+                   ft::pair<iterator, iterator> n;
+                   
+                   n.first = lower_bound(k);
+                   n.second = upper_bound(k);
+                   return n;     
+               }
+
+                ft::pair<Map_iterator_const,Map_iterator_const> equal_range (const key_type& k) const
+                {
+                    ft::pair<Map_iterator_const, Map_iterator_const> n;
+                   
+                    n.first = lower_bound(k);
+                    n.second = upper_bound(k);
+                    return n;   
+                }
+                // ---------------------- OBSERVES ----------------------------------
+
+                 //ritorna una copia della comparazione della chiave
+                Key_compare     key_comp() const {return (Compare());};
+
+                //ritorna un oggetto di comparazione
+                value_compare   value_comp() const {return (value_compare(Key_compare()));};
+                
+
+                // ---------------------- MODIFIERS ----------------------------------
+
                 ft::pair<iterator, bool> insert(const value_type &value)
                 {
                     iterator tmp;
@@ -272,14 +414,15 @@ namespace ft
                     return  (position);
                 }
 
-                void insert (iterator first, iterator last)
+                template <class InputIterator>
+                void insert(InputIterator first, InputIterator last)
                 {
                     while (first != last)
                     {
-                         insert(*first);
-                         first++;
+                        insert(*first);
+                        ++first;
                     }
-                }
+                };
 
                 void erase(iterator position)
                 {
@@ -310,6 +453,11 @@ namespace ft
                     swap(this->_root, x._root);
                     swap(this->_size, x._size);
                 } 
+
+                void clear()
+                {
+                        erase(begin(), end());
+                }
             
     };
 }
