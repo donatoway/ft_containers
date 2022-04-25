@@ -1,4 +1,8 @@
-#include "map/map.hpp"
+#ifndef STDTESTMAP_HPP
+#define STDTESTMAP_HPP
+
+#include <iostream>
+#include <map>
 
 
 #define RED "\e[0;31m"
@@ -6,25 +10,25 @@
 #define YEL "\e[0;33m"
 
 
-void testConstructor()
+void testConstructor1()
 {
     std::cout << GREEN << "TEST CONSTRUCTORS\n";
-    ft::map<char, int> map1;
+    std::map<char, int> map1;
 
-    ft::pair<char, int> pair;
+    std::pair<char, int> pair;
     char c = 'a';
     for (size_t i = 0; i < 5; i++)
     {
-        pair = ft::make_pair(c++,i);
+        pair = std::make_pair(c++,i);
         map1.insert(pair);
     }
-    ft::map<char, int> map2(map1);
-    ft::map<char, int> map3(map2.begin(), map2.end());
-     ft::map<char, int> map4 = map3;
+    std::map<char, int> map2(map1);
+    std::map<char, int> map3(map2.begin(), map2.end());
+     std::map<char, int> map4 = map3;
 
     //--------- PRINTING ... --------------
     std::cout << "MAP1 DEFAULT:\n";
-    ft::map<char, int>::iterator it;
+    std::map<char, int>::iterator it;
     for (it = map1.begin(); it != map1.end(); it++)
         std::cout << "first : " << it->first << " second : " << it->second << "\n";
     std::cout << std::endl << "MAP2 COPYCONSTRUCTOR\n";
@@ -39,18 +43,18 @@ void testConstructor()
 
 };
 
-void testIterator()
+void testIterator1()
 {
-    ft::map<std::string, int> map1;
+    std::map<std::string, int> map1;
 
     map1["alberto"] = 0;
     map1["carlo"] = 1;
     map1["paolo"] = 2;
-    const ft::map<std::string, int> map2(map1);
-    ft::map<std::string, int>::iterator it;
-    ft::map<std::string, int>::Reverse_iterator rev;
-    ft::map<std::string, int>::Map_iterator_const const_it;
-    ft::map<std::string, int>::Const_Rev_Map_Iterator constRev_it;
+    const std::map<std::string, int> map2(map1);
+    std::map<std::string, int>::iterator it;
+    std::map<std::string, int>::reverse_iterator rev;
+    std::map<std::string, int>::const_iterator const_it;
+    std::map<std::string, int>::const_reverse_iterator constRev_it;
 
     std::cout << GREEN"TEST ITERATOR\n\nTest iterator\n";
     for (it = map1.begin(); it != map1.end(); it++)
@@ -75,9 +79,9 @@ void testIterator()
 }
 
 
-void testCapacity()
+void testCapacity1()
 {
-    ft::map<int, int> map1;
+    std::map<int, int> map1;
     int i = 0;
     while (i++ < 1000)
         map1[i] = i;
@@ -98,10 +102,10 @@ void testCapacity()
         std::cout << "Container is not empty\n";
 }
 
-void testEementAccess()
+void testEementAccess1()
 {
     std::cout <<  GREEN <<"TEST ELEMENT ACCESS\n";
-    ft::map<int, std::string> map1;
+    std::map<int, std::string> map1;
     
     map1[0] = "primo";
     map1[1] = "secondo";
@@ -112,18 +116,18 @@ void testEementAccess()
     std::cout << map1[2] << "\n";
 }
 
-void testModifiers()
+void testModifiers1()
 {
-    ft::map<int, int> map1;
-    ft::map<int, int> map2;
-    ft::map<int, int>::iterator it;
-    ft::pair<int,int> pair;
+    std::map<int, int> map1;
+    std::map<int, int> map2;
+    std::map<int, int>::iterator it;
+    std::pair<int,int> pair;
     
     std::cout <<GREEN<< "TEST MODIFIERS\n";
     std::cout << "test insert whit a pair value\n";
     for (size_t i = 0; i < 10; i++)
     {
-        pair = ft::make_pair(i, i); 
+        pair = std::make_pair(i, i); 
         map1.insert(pair);
     }
     for (it = map1.begin(); it != map1.end(); it++)
@@ -136,7 +140,7 @@ void testModifiers()
          std::cout << "first : " << it->first << " second : " << it->second << "\n";
 
     std::cout << "test insert whit a pair_val and it \n";
-    pair = ft::make_pair(55, 10);
+    pair = std::make_pair(55, 10);
     map2.insert(map2.begin(), pair);
     std::cout <<  "first : " << map2.find(55)->first << " second "<< map2.find(55)->second<< "\n";
 
@@ -162,10 +166,10 @@ void testModifiers()
 
 }
 
-void    testObserves2()
+void    testObserves21()
 {
      std::cout << "\nTEST VALUE_COMPARE\n";
-    ft::map<char,int> mymap;
+    std::map<char,int> mymap;
 
     mymap['x']=1001;
     mymap['y']=2002;
@@ -173,20 +177,20 @@ void    testObserves2()
 
     std::cout << "mymap contains:\n";
 
-    ft::pair<char,int> highest = *mymap.rbegin();          // last element
+    std::pair<char,int> highest = *mymap.rbegin();          // last element
 
-    ft::map<char,int>::iterator it = mymap.begin();
+    std::map<char,int>::iterator it = mymap.begin();
     do {
         std::cout << it->first << " => " << it->second << '\n';
     } while ( mymap.value_comp()(*it++, highest) );
 }
 
-void    testObserves()
+void    testObserves1()
 {
     std::cout << GREEN<<"TEST KEY_COMP\n";
-    ft::map<char,int> mymap;
+    std::map<char,int> mymap;
 
-    ft::map<char,int>::Key_compare mycomp = mymap.key_comp();
+    std::map<char,int>::key_compare mycomp = mymap.key_comp();
 
     mymap['a']=100;
     mymap['b']=200;
@@ -196,16 +200,16 @@ void    testObserves()
 
     char highest = mymap.rbegin()->first;     // key value of last element
 
-    ft::map<char,int>::iterator it = mymap.begin();
+    std::map<char,int>::iterator it = mymap.begin();
     do {
         std::cout << it->first << " => " << it->second << '\n';
     } while ( mycomp((*it++).first, highest) );
-    testObserves2();
+    testObserves21();
 }
 
-void    testOperation()
+void    testOperation1()
 {
-    ft::map<char,int> mymap;
+    std::map<char,int> mymap;
 
     mymap['a'] = 1;
     mymap['b'] = 2;
@@ -225,13 +229,13 @@ void    testOperation()
 
     std::cout << "test lower_bound and upper_bound\n";
 
-    ft::map<char, int>::iterator it;
+    std::map<char, int>::iterator it;
 
     for (it = mymap.lower_bound('b'); it != mymap.upper_bound('d'); it++)
         std::cout << it->first << "\n";
 
     std::cout << "test equal_range\n";
-    ft::pair<ft::map<char,int>::iterator,ft::map<char,int>::iterator> ret;
+    std::pair<std::map<char,int>::iterator,std::map<char,int>::iterator> ret;
     ret = mymap.equal_range('b');
 
     std::cout << "lower value in the range is : " << ret.first->first << "\n";
@@ -239,25 +243,22 @@ void    testOperation()
 
 }
 
-int main()
+void std_test_map()
 {
-    testConstructor();
+      testConstructor1();
     std::cout << "\n\n-----------------------\n\n";
-    testIterator();
+    testIterator1();
     std::cout << "\n\n-----------------------\n\n";
-    testCapacity();
+    testCapacity1();
     std::cout << "\n\n-----------------------\n\n";
-    testEementAccess();
+    testEementAccess1();
     std::cout << "\n\n-----------------------\n\n";
-    testModifiers();
+    testModifiers1();
     std::cout << "\n\n-----------------------\n\n";
-    testObserves();
+    testObserves1();
     std::cout << "\n\n-----------------------\n\n";
-    testOperation();
-
-
-
-
-
+    testOperation1();
 
 }
+
+#endif
