@@ -152,7 +152,36 @@ void    testModifiers()
     vect.insert(vect.begin(),vect.begin(), vect.end());
     for ( it = vect.begin(); it != vect.end(); it++)
         std::cout << *it << " ";
-
+    std::cout << "\ntest erase :\n";
+    vect.erase(vect.begin());
+    vect.erase(vect.end());
+    for ( it = vect.begin(); it != vect.end(); it++)
+        std::cout << *it << " ";
+     std::cout << "\ntest erase whit range: from gianni to giovanni\n";
+     it = vect.begin();
+     it++;
+     vect.erase(it, --vect.end());
+     for ( it = vect.begin(); it != vect.end(); it++)
+        std::cout << *it << " ";
+    std::cout << "\ntest clear\n";
+    vect.clear();
+    if (vect.size() == 0)
+        std::cout << "vector is empty\n";
+    for (it = vect.begin(); it != vect.end(); it++)
+        std::cout << *it << " ";
+    ft::vector<std::string> vect2(5, "element");
+    vect.swap(vect2);
+    std::cout << "test swap\nvector :";
+    for (it = vect.begin(); it != vect.end(); it++)
+        std::cout << *it << " ";
+    if (vect2.size() == 0)
+        std::cout << "\nvector2 is empty\n";
+    for (it = vect2.begin(); it != vect2.end(); it++)
+        std::cout << *it << " ";
+     std::cout << "\ntest assign\nvect2 : ";
+    vect2 = ft::vector<std::string>(6, "assign");
+    for (it = vect2.begin(); it != vect2.end(); it++)
+        std::cout << *it << " ";
 }
 
 #endif
