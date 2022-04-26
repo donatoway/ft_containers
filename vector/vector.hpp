@@ -45,16 +45,18 @@ namespace ft
 
                 //default (costruisce un vettore senza elementi)
                 explicit vector (const allocator_type& Allocator  = allocator_type()):
-                _vector(nullptr), _allocation(Allocator), _size(0), _capacity(0)
+                _allocation(Allocator), _vector(nullptr), _capacity(0)
                 {
+                    _size = 0;
                     _vector = _allocation.allocate(0);
                 };
 
                 //Fill Constructor (costruisce un vettore con n elementi, ed ogni elemento è una copia di val)
 
                 explicit vector (size_type n, const value_type& val = value_type(),
-                    const allocator_type& Allocator = allocator_type()):_allocation(Allocator), _size(n), _vector(0),_capacity(0)
+                    const allocator_type& Allocator = allocator_type()):_allocation(Allocator), _vector(0),_capacity(0)
                 {
+                    _size = n;
                     _capacity = n * 2;
                     _vector = _allocation.allocate(_capacity);
                     if (n > 0)
@@ -68,10 +70,9 @@ namespace ft
 
                 template <class InputIterator>
                 vector (InputIterator first, InputIterator last, const allocator_type& Allocator = allocator_type(),\
-                 typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
+                 typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0):_allocation(Allocator)
                 {
                     size_t i = 0;
-
                     for (InputIterator iter = first; iter != last; iter++)
                         i++;
                     _size = i;

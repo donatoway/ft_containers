@@ -181,7 +181,7 @@ namespace ft
 
                 // COSTRUTTORE DI DEFAULT
                 explicit map( const Compare& comp = Key_compare() ,  const Allocator& alloc = Allocator() ):
-                _allocation(alloc), _comp(comp)
+                _comp(comp), _allocation(alloc)
                 {
                     _root = _new_node(key_type(), mapped_type(), 0);
                     _root->right = _new_node(key_type(), mapped_type(), _root, true);
@@ -189,9 +189,9 @@ namespace ft
                 }
 
                 // COSTRUTTORE RANGE ITERATOR
-                template <class InputIterator> map (InputIterator first, InputIterator last,const Key_compare& comp = Key_compare(),
+                template <class InputIterator> map (InputIterator first, InputIterator last,
                     const allocator_type& alloc = allocator_type())
-                    :_size(0), _allocation(alloc)
+                    :_allocation(alloc), _size(0)
                 {
                     _root = _new_node(key_type(), mapped_type(), 0);
                     _root->right = _new_node(key_type(), mapped_type(), _root, true);
@@ -320,7 +320,6 @@ namespace ft
 
                 size_type count (const key_type& k) const
                 {
-                    size_t c = 0;
                     ConstMap_iterator<key_type, mapped_type> it;
 
                     for (it = begin(); it != end(); it++)
