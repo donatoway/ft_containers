@@ -179,7 +179,7 @@ void    testModifiers()
     for (it = vect2.begin(); it != vect2.end(); it++)
         std::cout << *it << " ";
      std::cout << "\ntest assign\nvect2 : ";
-    vect2 = ft::vector<std::string>(3, "assign");
+    vect2 = ft::vector<std::string>(5, "assign");
     for (it = vect2.begin(); it != vect2.end(); it++)
         std::cout << *it << " ";
 }
@@ -207,10 +207,15 @@ void testOperators()
 void    test_ft_vector()
 {
     testVectConstructors();
+    std::cout << "\n\n-----------------------\n\n";
     testIterator();
+    std::cout << "\n\n-----------------------\n\n";
     testCapacity();
+    std::cout << "\n\n-----------------------\n\n";
     elementAccess();
+    std::cout << "\n\n-----------------------\n\n";
     testModifiers();
+    std::cout << "\n\n-----------------------\n\n";
     testOperators();
 }
 

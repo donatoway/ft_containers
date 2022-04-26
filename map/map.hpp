@@ -205,8 +205,8 @@ namespace ft
                 // COPY CONSTRUCTOR
                 map (const map& x)
                 {
-                    _root = _new_node(key_type(), mapped_type(), 0);
-                    _root->right = _new_node(key_type(), mapped_type(), _root, true);
+                  //  _root = _new_node(key_type(), mapped_type(), 0);
+                   // _root->right = _new_node(key_type(), mapped_type(), _root, true);
                     _size = 0;
                     *this = x;
                 }
@@ -226,8 +226,8 @@ namespace ft
                 ~map()
                 {
                     clear();
-					_allocation.deallocate(_root, 1);
-                    _allocation.deallocate(_root->right, 1);
+					_allocation.deallocate(_root, _size);
+                    _allocation.deallocate(_root->right, _size);
                 }
 
                 allocator_type get_allocator() const {return (this->_allocation);};

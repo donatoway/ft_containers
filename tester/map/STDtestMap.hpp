@@ -6,13 +6,12 @@
 
 
 #define RED "\e[0;31m"
-#define GREEN "\e[0;32m"
-#define YEL "\e[0;33m"
+#define YELLOW "\e[0;33m"
 
 
 void testConstructor1()
 {
-    std::cout << GREEN << "TEST CONSTRUCTORS\n";
+    std::cout << YELLOW << "TEST CONSTRUCTORS\n";
     std::map<char, int> map1;
 
     std::pair<char, int> pair;
@@ -56,7 +55,7 @@ void testIterator1()
     std::map<std::string, int>::const_iterator const_it;
     std::map<std::string, int>::const_reverse_iterator constRev_it;
 
-    std::cout << GREEN"TEST ITERATOR\n\nTest iterator\n";
+    std::cout << YELLOW"TEST ITERATOR\n\nTest iterator\n";
     for (it = map1.begin(); it != map1.end(); it++)
         std::cout << "first : " << it->first << " second : " << it->second << "\n";
 
@@ -86,7 +85,7 @@ void testCapacity1()
     while (i++ < 1000)
         map1[i] = i;
 
-    std::cout << GREEN"TEST CAPACITY : \ntest size()\n";
+    std::cout << YELLOW"TEST CAPACITY : \ntest size()\n";
 
     std::cout << map1.size() << "\n";
 
@@ -104,7 +103,7 @@ void testCapacity1()
 
 void testEementAccess1()
 {
-    std::cout <<  GREEN <<"TEST ELEMENT ACCESS\n";
+    std::cout <<  YELLOW <<"TEST ELEMENT ACCESS\n";
     std::map<int, std::string> map1;
     
     map1[0] = "primo";
@@ -123,7 +122,7 @@ void testModifiers1()
     std::map<int, int>::iterator it;
     std::pair<int,int> pair;
     
-    std::cout <<GREEN<< "TEST MODIFIERS\n";
+    std::cout <<YELLOW<< "TEST MODIFIERS\n";
     std::cout << "test insert whit a pair value\n";
     for (size_t i = 0; i < 10; i++)
     {
@@ -187,7 +186,7 @@ void    testObserves21()
 
 void    testObserves1()
 {
-    std::cout << GREEN<<"TEST KEY_COMP\n";
+    std::cout << YELLOW<<"TEST KEY_COMP\n";
     std::map<char,int> mymap;
 
     std::map<char,int>::key_compare mycomp = mymap.key_comp();
@@ -217,7 +216,7 @@ void    testOperation1()
     mymap['d'] = 3;
     mymap['e'] = 3;
 
-    std::cout <<GREEN << "TEST OPERATION\ntest find\n";
+    std::cout <<YELLOW << "TEST OPERATION\ntest find\n";
 
     std::cout << "if map have an 'a' elemnt print it:\n";
     if ( mymap.find('a')->first)

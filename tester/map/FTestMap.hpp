@@ -14,7 +14,7 @@ void testConstructor()
     std::cout << GREEN << "TEST CONSTRUCTORS\n";
     ft::map<char, int> map1;
 
-    ft::pair<char, int> pair;
+   ft::pair<char, int> pair;
     char c = 'a';
     for (size_t i = 0; i < 5; i++)
     {
@@ -26,20 +26,23 @@ void testConstructor()
      ft::map<char, int> map4 = map3;
 
     //--------- PRINTING ... --------------
+    
     std::cout << "MAP1 DEFAULT:\n";
     ft::map<char, int>::iterator it;
+    
     for (it = map1.begin(); it != map1.end(); it++)
         std::cout << "first : " << it->first << " second : " << it->second << "\n";
+    
     std::cout << std::endl << "MAP2 COPYCONSTRUCTOR\n";
      for (it = map2.begin(); it != map2.end(); it++)
         std::cout << "first : " << it->first << " second : " << it->second << "\n";
+    
     std::cout << std::endl << "MAP3 RANGE ITERATOR\n";
      for (it = map3.begin(); it != map3.end(); it++)
         std::cout << "first : " << it->first << " second : " << it->second << "\n";
      std::cout << std::endl << "MAP4 ASSIGN\n";
      for (it = map4.begin(); it != map4.end(); it++)
         std::cout << "first : " << it->first << " second : " << it->second << "\n";
-
 };
 
 void testIterator()
@@ -257,7 +260,6 @@ void ft_test_map()
     testObserves();
     std::cout << "\n\n-----------------------\n\n";
     testOperation();
-
 }
 
 #endif

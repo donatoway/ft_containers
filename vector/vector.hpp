@@ -105,8 +105,6 @@ namespace ft
                     _size = x._size;
                     _capacity = x._capacity;
                     _allocation = x._allocation;
-                    if (_size)
-                        _allocation.allocate(_size);
                     for (size_t i = 0; i < _size; i++)
                         _allocation.construct(_vector + i, x._vector[i]);
                     return (*this);

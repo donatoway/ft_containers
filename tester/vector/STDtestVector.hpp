@@ -208,10 +208,15 @@ void testOperators2()
 void test_std_vector()
 {
     testVectConstructors2();
+    std::cout << "\n\n-----------------------\n\n";
     testIterator2();
+    std::cout << "\n\n-----------------------\n\n";
     testCapacity2();
+    std::cout << "\n\n-----------------------\n\n";
     elementAccess2();
+    std::cout << "\n\n-----------------------\n\n";
     testModifiers2();
+    std::cout << "\n\n-----------------------\n\n";
     testOperators2();
 }
 #endif
