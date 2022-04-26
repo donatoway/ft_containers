@@ -1,37 +1,37 @@
-#ifndef FTESTVECTOR_HPP
-#define FTESTVECTOR_HPP
+#ifndef STDTESTVECTOR_HPP
+#define STDTESTVECTOR_HPP
 
-#include "../../vector/vector.hpp"
 #include <iostream>
+#include <vector>
+#define YELLOW  "\033[33m"      /* Yellow */
 
-
-void testVectConstructors()
+void testVectConstructors2()
 {
-    ft::vector<int>::iterator it;
+    std::vector<int>::iterator it;
 
     int arr[] = {1, 2, 3};
-    std::cout <<GREEN<< "TEST VECTOR\n";
+    std::cout <<YELLOW<< "TEST VECTOR\n";
     //default
     std::cout << "default\n";
-    ft::vector<int> marco;
+    std::vector<int> marco;
 	marco.insert(marco.begin(), arr, arr + 3);
      for (it = marco.begin(); it != marco.end(); it++)
         std::cout << *it << "\n";
     std::cout << "fill\n";
     //fill  crea 5 element di valore 5
-    ft::vector<int> jon(5, 10);
+    std::vector<int> jon(5, 10);
     for (it = jon.begin(); it != jon.end(); it++)
         std::cout << *it << "\n";
     //range
      std::cout << "range\n";
-    ft::vector<int> carl(marco.begin(), marco.end());
+    std::vector<int> carl(marco.begin(), marco.end());
     for (it = carl.begin(); it != carl.end(); it++)
         std::cout << *it << "\n";
     
     //copy
      std::cout << "copy constructor\n";
-     ft::vector<int> mik(jon);
-     ft::vector<int> pio = mik;
+     std::vector<int> mik(jon);
+     std::vector<int> pio = mik;
     for (it = mik.begin(); it != mik.end(); it++)
         std::cout << *it << "\n";
 
@@ -43,19 +43,19 @@ void testVectConstructors()
 
 }
 
-void testIterator()
+void testIterator2()
 {
-     std::cout <<GREEN<< "TEST ITERATOR\n";
-    ft::vector<char>  vect;
-    ft::vector<char>::iterator it;
-    ft::vector<char>::reverse_iterator rev;
-    ft::vector<char>::const_iterator const_it;
+     std::cout <<YELLOW<< "TEST ITERATOR\n";
+    std::vector<char>  vect;
+    std::vector<char>::iterator it;
+    std::vector<char>::reverse_iterator rev;
+    std::vector<char>::const_iterator const_it;
 
      char c = 'a';
     while (c < 'e')
         vect.push_back(c++);
 
-    const ft::vector<char>  vect2 = vect;
+    const std::vector<char>  vect2 = vect;
     std::cout << "test iterator\n";
     for (it = vect.begin(); it != vect.end(); it++)
         std::cout << *it <<"\n";
@@ -67,12 +67,12 @@ void testIterator()
         std::cout << *const_it <<"\n";
 }
 
-void testCapacity()
+void testCapacity2()
 {
-    ft::vector<int> vect;
+    std::vector<int> vect;
    for (size_t i = 0; i < 1000; i++)
     vect.push_back(i);
-    std::cout <<GREEN<< "TEST CAPACITY\ntest size: \n";
+    std::cout <<YELLOW<< "TEST CAPACITY\ntest size: \n";
     std::cout << vect.size() << "\n";
     std::cout << "test max_size\n";
     std::cout << vect.max_size() << "\n";
@@ -91,12 +91,12 @@ void testCapacity()
     
 }
 
-void    elementAccess()
+void    elementAccess2()
 {
-    std::cout << GREEN<<"TEST ELEMENT ACCESS \n";
-    ft::vector<int> myvector (10);   // 10 zero-initialized elements
+    std::cout << YELLOW<<"TEST ELEMENT ACCESS \n";
+    std::vector<int> myvector (10);   // 10 zero-initialized elements
 
-    ft::vector<int>::size_type sz = myvector.size();
+    std::vector<int>::size_type sz = myvector.size();
 
     // assign some values:
     for (unsigned i=0; i<sz; i++) myvector[i]=i;
@@ -110,7 +110,7 @@ void    elementAccess()
         myvector[i]=temp;
     }
 
-    std::cout <<GREEN<< "myvector contains:";
+    std::cout <<YELLOW<< "myvector contains:";
     for (unsigned i=0; i<sz; i++)
         std::cout << ' ' << myvector[i];
     std::cout << '\n';
@@ -123,11 +123,11 @@ void    elementAccess()
      std::cout << "back : " <<  myvector.back() << "\n";
 }
 
-void    testModifiers()
+void    testModifiers2()
 {
-    std::cout << GREEN<<"TEST MODIFIERS\n";
-    ft::vector<std::string>             vect;
-    ft::vector<std::string>::iterator   it;
+    std::cout << YELLOW<<"TEST MODIFIERS\n";
+    std::vector<std::string>             vect;
+    std::vector<std::string>::iterator   it;
 
     vect.push_back("marco");
     vect.push_back("giovanni");
@@ -169,7 +169,7 @@ void    testModifiers()
         std::cout << "vector is empty\n";
     for (it = vect.begin(); it != vect.end(); it++)
         std::cout << *it << " ";
-    ft::vector<std::string> vect2(5, "element");
+    std::vector<std::string> vect2(5, "element");
     vect.swap(vect2);
     std::cout << "test swap\nvector :";
     for (it = vect.begin(); it != vect.end(); it++)
@@ -179,16 +179,17 @@ void    testModifiers()
     for (it = vect2.begin(); it != vect2.end(); it++)
         std::cout << *it << " ";
      std::cout << "\ntest assign\nvect2 : ";
-    vect2 = ft::vector<std::string>(3, "assign");
+    vect2 = std::vector<std::string>(6, "assign");
     for (it = vect2.begin(); it != vect2.end(); it++)
         std::cout << *it << " ";
+        
 }
 
-void testOperators()
+void testOperators2()
 {
-    std::cout << GREEN<<"\nTEST OPERATORS\n";
-    ft::vector<int> vect(5, 10);
-    ft::vector<int> vect2(2, 7);
+    std::cout << YELLOW<<"\nTEST OPERATORS\n";
+    std::vector<int> vect(5, 10);
+    std::vector<int> vect2(2, 7);
     if (vect == vect2)
         std::cout << "vect is equal vect2\n";
     else if (vect != vect2)
@@ -204,14 +205,13 @@ void testOperators()
         std::cout << "vect2 is less-equal than vect\n";
 }
 
-void    test_ft_vector()
+void test_std_vector()
 {
-    testVectConstructors();
-    testIterator();
-    testCapacity();
-    elementAccess();
-    testModifiers();
-    testOperators();
+    testVectConstructors2();
+    testIterator2();
+    testCapacity2();
+    elementAccess2();
+    testModifiers2();
+    testOperators2();
 }
-
 #endif

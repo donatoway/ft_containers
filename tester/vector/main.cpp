@@ -1,16 +1,10 @@
 #include "../../vector/vector.hpp"
 #include "FTestVector.hpp"
-
+#include "STDtestVector.hpp"
 
 
 int main()
 {
-  
-  //  testVectConstructors();
-  //  testIterator();
-   // testCapacity();
-  // elementAccess();
-
-    testModifiers();
-    //CONTINUARE CON GLI ALTRI TEST E POI CREARE STACK
+    test_ft_vector();
+    test_std_vector();
 }

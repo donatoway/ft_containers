@@ -4,8 +4,12 @@
 #include <memory>
 #include "utils.hpp"
 #include <iostream>
+#include <stdexcept>
+#include <cmath>
+#include "../map/map.hpp"
 #include <cstring>
 #include "iterators.hpp"
+#include "vector.hpp"
 
 #define RESET   "\033[0m"
 #define BLACK   "\033[30m"      /* Black */
@@ -91,12 +95,12 @@ namespace ft
                 // Distruttore
                 ~vector()
                 {
-                    if (_size)
-                        _allocation.deallocate(_vector, _size);
+                    if (_capacity != 0 || _vector != NULL)
+				        _allocation.deallocate(_vector, _capacity);
                 };
                 vector& operator= (const vector& x)
                 {
-                    if (_capacity)
+                    if (_capacity > 0 && _size > 0)
                         _allocation.deallocate(_vector, _capacity);
                     _size = x._size;
                     _capacity = x._capacity;
@@ -133,19 +137,27 @@ namespace ft
                     return (_allocation.max_size());
                 };
 
-                void reserve (size_type n)
+                void reserve( size_type n )
                 {
-                    //se n è maggiore aumenta la _capacity del vettore
-                    if (n > _capacity)
+                    if (n > _capacity && _vector != nullptr)
                     {
-                        pointer temp = _allocation.allocate(n);
+                        pointer tmp = NULL;
+                        tmp = _allocation.allocate(n);
                         for (size_t i = 0; i < _size; i++)
-                            temp[i] = _vector[i];
+                                _allocation.construct((tmp + i), _vector[i]);
                         _allocation.deallocate(_vector, _capacity);
-                        _vector = temp;
-                        _capacity = n - 1 ;
-                    };
-                };
+                        _vector = _allocation.allocate(n);
+                        for (size_t i = 0; i < _size; i++)
+                                _allocation.construct((_vector + i), tmp[i]);
+                        _capacity = n;
+                        _allocation.deallocate(tmp, n);
+                    }
+                    else if (_vector == nullptr)
+                    {
+                        _capacity = n;
+                        _vector = _allocation.allocate(_capacity);
+                    }
+                }
                 
                 void resize (size_type n, value_type val = value_type())
                 {
@@ -320,10 +332,8 @@ namespace ft
                 if ((_size + 1) > _capacity)
                     reserve((_size + 1)*2);
                 _size += 1;
-                iterator it;
-                size_t i = 0;
-                for (it = begin(); it != end(); it++,i++){};
-                _vector[i-1] = value;    
+                _allocation.construct((_vector + _size - 1), value);
+			    _vector[_size - 1] = value; 
             };
             //POP_BACK : rimuove l'ultimo elemento
             void pop_back()
@@ -357,54 +367,48 @@ namespace ft
                         pointer                         _vector;
                         size_type                       _size;
                         size_type                       _capacity;
-    };
-
-    //) Checks if the contents of lhs and rhs are equal, 
-    // that is, they have the same number of elements 
-    //and each element in lhs compares equal with the element in rhs at the same position.
-    template< class T, class Alloc >
-    bool operator==( const vector<T,Alloc>& lhs,
-    const vector<T,Alloc>& rhs ) 
-    {
-        if ((rhs.size() != lhs.size()) || (rhs.capacity() != lhs.capacity()))
-            return false;
-        size_t i = 0;
-        while (i < lhs.size())
-        {
-            if (rhs[i] != lhs[i])
-                return (false);
-            i++;
-        }
+                public:
             
-        return (true);
     };
+            template< class T, class Alloc >
+            bool operator==(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs)
+            {
+                if(lhs.size() != rhs.size())
+                    return(false);
+                for (size_t i = 0; i < lhs.size(); i++)
+                    if(lhs[i] != rhs[i])
+                        return(false);
+                return(true);
+            }
+            template< class T, class Alloc >
+             bool operator!=(const  vector<T, Alloc>& lhs, const  vector<T, Alloc>& rhs ){return !(lhs == rhs);};
+            template< class T, class Alloc >
+             bool operator<( const  vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs )
+            {
+                if (lhs.size() < rhs.size())
+                    return (true);
+                return (ft::lexicographical_compare(lhs.begin(),lhs.end(),rhs.begin(),rhs.end()));
+            }
 
-    template< class T, class Alloc >
-    bool operator!=( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs ){return !(lhs == rhs);};
+            template< class T, class Alloc >
+             bool operator<=( const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs )
+            {
+                return (!(lhs > rhs));
+            }
 
-    template< class T, class Alloc >
-    bool operator<( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs )
-    {
-        return (ft::lexicographical_compare(lhs.begin(),lhs.end(),rhs.begin(),rhs.end()));
-    }
+            template< class T, class Alloc >
+            bool operator>( const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs )
+            {
+                if (lhs.size() > rhs.size())
+                    return (true);
+                return (ft::lexicographical_compare(lhs.begin(),lhs.end(),rhs.begin(),rhs.end()));
+            }
 
-    template< class T, class Alloc >
-    bool operator<=( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs )
-    {
-        return (!(rhs > lhs));
-    }
-
-    template< class T, class Alloc >
-    bool operator>( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs )
-    {
-        return (ft::lexicographical_compare(rhs.begin(),rhs.end(),lhs.begin(),lhs.end()));
-    }
-
-    template< class T, class Alloc >
-    bool operator>=( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs )
-    {
-        return (!(rhs < lhs));
-    }
+            template< class T, class Alloc >
+            bool operator>=( const vector<T, Alloc>& lhs, const  vector<T, Alloc>& rhs )
+            {
+                return (!(lhs < rhs));
+            }
 };
 
 #endif
