@@ -2,7 +2,8 @@
 #define FTESTVECTOR_HPP
 
 #include "../../vector/vector.hpp"
-
+#include <iostream>
+#include <vector>
 void testVectConstructors()
 {
     ft::vector<int>::iterator it;
@@ -65,9 +66,93 @@ void testIterator()
         std::cout << *const_it <<"\n";
 }
 
+void testCapacity()
+{
+    ft::vector<int> vect;
+   for (size_t i = 0; i < 1000; i++)
+    vect.push_back(i);
+    std::cout << "TEST CAPACITY\ntest size: \n";
+    std::cout << vect.size() << "\n";
+    std::cout << "test max_size\n";
+    std::cout << vect.max_size() << "\n";
+    std::cout << "test capacity\n";
+    std::cout << vect.capacity() << "\n";
+    std::cout << "test empty: return 0 if not\n";
+    std::cout << vect.empty() << "\n";
+    std::cout << "test resize\n";
+    vect.resize(5);
+    std::cout << vect.size() << "\n";
+    std::cout << vect.capacity() << "\n";
+    std::cout << "test reserve\n";
+    vect.reserve(100);
+    std::cout << vect.size() << "\n";
+    std::cout << vect.capacity() << "\n";
+    
+}
 
+void    elementAccess()
+{
+    std::cout << "TEST ELEMENT ACCESS \n";
+    ft::vector<int> myvector (10);   // 10 zero-initialized elements
 
+    ft::vector<int>::size_type sz = myvector.size();
 
+    // assign some values:
+    for (unsigned i=0; i<sz; i++) myvector[i]=i;
 
+    // reverse vector using operator[]:
+    for (unsigned i=0; i<sz/2; i++)
+    {
+        int temp;
+        temp = myvector[sz-1-i];
+        myvector[sz-1-i]=myvector[i];
+        myvector[i]=temp;
+    }
+
+    std::cout << "myvector contains:";
+    for (unsigned i=0; i<sz; i++)
+        std::cout << ' ' << myvector[i];
+    std::cout << '\n';
+
+    std::cout << "test at:\n";
+    std::cout << "pos 0: " <<  myvector.at(0) << "\n";
+    std::cout << "pos 9: " <<  myvector.at(9) << "\n";
+     std::cout << "pos 5: " <<  myvector.at(5) << "\n";
+     std::cout << "front : " <<  myvector.front() << "\n";
+     std::cout << "back : " <<  myvector.back() << "\n";
+}
+
+void    testModifiers()
+{
+    std::cout << "TEST MODIFIERS\n";
+    ft::vector<std::string>             vect;
+    ft::vector<std::string>::iterator   it;
+
+    vect.push_back("marco");
+    vect.push_back("giovanni");
+    vect.push_back("sara");
+    vect.push_back("carlo");
+    vect.push_back("gimmy");
+
+    std::cout << "\ntest push back\n";
+    for ( it = vect.begin(); it != vect.end(); it++)
+        std::cout << *it << " ";
+    std::cout << "\ntest pop back\n";
+    vect.pop_back();
+    vect.pop_back();
+    for ( it = vect.begin(); it != vect.end(); it++)
+        std::cout << *it << " ";
+    std::cout << "\ntest insert\n";
+    vect.insert(vect.begin(), "luigi");
+    vect.insert(vect.end(), "giuseppe");
+    vect.insert(--it, 2, "gianni");
+    for ( it = vect.begin(); it != vect.end(); it++)
+        std::cout << *it << " ";
+    std::cout << "\ninsert range to position begin, element from begin to it\n";
+    vect.insert(vect.begin(),vect.begin(), vect.end());
+    for ( it = vect.begin(); it != vect.end(); it++)
+        std::cout << *it << " ";
+
+}
 
 #endif

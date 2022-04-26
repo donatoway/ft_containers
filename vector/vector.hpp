@@ -143,6 +143,7 @@ namespace ft
                             temp[i] = _vector[i];
                         _allocation.deallocate(_vector, _capacity);
                         _vector = temp;
+                        _capacity = n - 1 ;
                     };
                 };
                 
@@ -215,23 +216,10 @@ namespace ft
             // rimangono validi 
             iterator insert( iterator pos, const T& value )
             {
-                iterator it;
-                size_t  i = 0;
-                size_t  x = 0;
-                for (it = begin(); it != pos; it++)
-                    i++;
-                if (i > size())
-                {
-                    _size = i;
-                    reserve(i*2);
-                }
-                _size++;
-                x = i;
-                i++;
-                while (i < _size)
-                    _vector[i++] = *it++;
-                _vector[x] = value;      
-                return it;
+                difference_type index = pos - begin();
+                
+                insert(pos, 1, value);
+                return iterator(&_vector[index]);
             };
             //INSERT: (3 parametri) inserisce un'ammontare di volte,
             //il valore passato come terzo argomento
@@ -340,9 +328,10 @@ namespace ft
             //POP_BACK : rimuove l'ultimo elemento
             void pop_back()
             {
-                _vector[_size] = 0;
-                _size -= 1;
-
+                iterator it =begin();
+                while (it != end())
+                    ++it;
+                erase(it);
             };
             //SWAP : Scambia il contenuto del conteiner con quello di altri
             //       Non richiama nessun copy, move o swap sugli elementi
